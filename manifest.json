@@ -1,0 +1,15 @@
+{
+  "name": "SariSmart",
+  "short_name": "SariSmart",
+  "description": "Smart Restocking for a Smarter Sari-Sari Store — Every Item Counts. Every Sale Matters.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#7A1E2B",
+  "theme_color": "#7A1E2B",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
