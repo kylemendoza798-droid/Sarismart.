@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SariSmart — Smart Restocking</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#7A1E2B">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SariSmart">
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root{
+    --maroon:#7A1E2B;
+    --maroon-dark:#5A1520;
+    --gold:#D9A441;
+    --gold-light:#F3D98B;
+    --cream:#FBF6EC;
+    --ink:#2B1E14;
+    --line:#E6DAC2;
+    --green:#3E7A47;
+    --red:#B23A3A;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    padding-bottom:80px;
+  }
+  header{
+    background:var(--maroon);
+    color:var(--gold-light);
+    padding:14px 20px 12px;
+    position:sticky;
+    top:0;
+    z-index:20;
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
+  }
+  header h1{
+    margin:0;
+    font-size:1.4rem;
+    letter-spacing:.5px;
+  }
+  header h1 span{color:var(--gold);}
+  header p{margin:2px 0 0;font-size:.78rem;opacity:.85;}
+  .store-badge{
+    margin-top:6px;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:rgba(0,0,0,.2);
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:20px;
+    padding:3px 10px;
+    font-size:.72rem;
+    color:var(--gold-light);
+  }
+
+  nav{
+    display:flex;
+    background:var(--maroon-dark);
+    position:sticky;
+    top:78px;
+    z-index:19;
+    overflow-x:auto;
+  }
+  nav button{
+    flex:1;
+    min-width:70px;
+    padding:11px 4px;
+    background:none;
+    border:none;
+    color:#e8d9c2;
+    font-size:.74rem;
+    font-weight:600;
+    cursor:pointer;
+    border-bottom:3px solid transparent;
+    white-space:nowrap;
+  }
+  nav button.active{
+    color:var(--gold-light);
+    border-bottom:3px solid var(--gold);
+  }
+
+  main{padding:16px;max-width:520px;margin:0 auto;}
+  .view{display:none;}
+  .view.active{display:block;}
+
+  .card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:16px;
+    margin-bottom:14px;
+  }
+  .card h2{margin:0 0 10px;font-size:1rem;color:var(--maroon);}
+
+  .mode-toggle{display:flex;gap:10px;margin-bottom:14px;}
+  .mode-btn{
+    flex:1;
+    padding:14px 8px;
+    border-radius:8px;
+    border:2px solid var(--line);
+    background:#fff;
+    font-weight:700;
+    font-size:.9rem;
+    cursor:pointer;
+    color:var(--ink);
+  }
+  .mode-btn.selected.stock{border-color:var(--maroon);background:var(--maroon);color:#fff;}
+  .mode-btn.selected.sale{border-color:var(--gold);background:var(--gold);color:var(--maroon-dark);}
+
+  #reader{width:100%;border-radius:8px;overflow:hidden;}
+  .scan-hint{text-align:center;font-size:.8rem;color:#8a7860;margin-top:8px;}
+
+  input, select{
+    width:100%;
+    padding:10px;
+    border:1px solid var(--line);
+    border-radius:6px;
+    font-size:.95rem;
+    margin-bottom:10px;
+    background:#fffdf8;
+  }
+  label{font-size:.78rem;font-weight:600;color:#6b5a44;display:block;margin-bottom:4px;}
+  .btn{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:var(--maroon);
+    color:#fff;
+    font-weight:700;
+    font-size:.95rem;
+    cursor:pointer;
+  }
+  .btn.gold{background:var(--gold);color:var(--maroon-dark);}
+  .btn.ghost{background:none;border:1px solid var(--line);color:var(--ink);}
+  .btn.small{padding:8px;font-size:.8rem;}
+  .btn-row{display:flex;gap:8px;}
+  .btn-row .btn{flex:1;}
+
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .stat{
+    background:#fff;
+    border:1px solid var(--line);
+    border-left:4px solid var(--gold);
+    border-radius:8px;
+    padding:12px;
+  }
+  .stat .num{font-size:1.4rem;font-weight:800;color:var(--maroon);}
+  .stat .label{font-size:.72rem;color:#8a7860;text-transform:uppercase;letter-spacing:.4px;}
+
+  .prod-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 0;
+    border-bottom:1px solid var(--line);
+    font-size:.88rem;
+    gap:10px;
+  }
+  .prod-row:last-child{border-bottom:none;}
+  .prod-row .name{font-weight:600;}
+  .prod-row .meta{font-size:.75rem;color:#8a7860;}
+  .qty-badge{
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:2px 10px;
+    font-size:.75rem;
+    font-weight:700;
+    color:var(--maroon);
+    white-space:nowrap;
+  }
+  .qty-badge.low{background:#FBE7E7;color:var(--red);border-color:#f0c6c6;}
+  .txn-tag{
+    display:inline-block;
+    font-size:.68rem;
+    font-weight:700;
+    color:var(--maroon);
+    background:var(--gold-light);
+    border-radius:6px;
+    padding:1px 6px;
+    margin-right:6px;
+  }
+
+  .qr-box{background:#fff;padding:12px;border-radius:8px;display:flex;justify-content:center;margin-top:10px;}
+
+  .cart-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px 10px;
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:8px;
+    margin-bottom:6px;
+    font-size:.85rem;
+  }
+  .cart-item button{
+    background:none;border:none;color:var(--red);font-weight:700;font-size:1rem;cursor:pointer;padding:0 4px;
+  }
+
+  #toast{
+    position:fixed;
+    bottom:16px;
+    left:50%;
+    transform:translateX(-50%);
+    background:var(--maroon);
+    color:#fff;
+    padding:10px 18px;
+    border-radius:24px;
+    font-size:.85rem;
+    display:none;
+    z-index:50;
+    box-shadow:0 4px 12px rgba(0,0,0,.2);
+    max-width:90%;
+    text-align:center;
+  }
+  .empty{text-align:center;color:#a3937a;font-size:.85rem;padding:20px 0;}
+  .note{font-size:.8rem;color:#6b5a44;line-height:1.5;}
+</style>
+</head>
+<body>
+
+<header style="display:flex;align-items:center;gap:12px;">
+  <img src="logo.png" alt="SariSmart logo" style="height:44px;width:44px;object-fit:contain;border-radius:8px;background:#fff;padding:3px;flex-shrink:0;">
+  <div>
+    <h1>Sari<span>Smart</span></h1>
+    <p>Every Item Counts. Every Sale Matters.</p>
+    <div class="store-badge">🏪 <span id="activeStoreLabel">Main Store</span></div>
+  </div>
+</header>
+
+<nav>
+  <button class="tab active" data-view="scan">Scan</button>
+  <button class="tab" data-view="dashboard">Dashboard</button>
+  <button class="tab" data-view="products">Products</button>
+  <button class="tab" data-view="qr">QR Labels</button>
+  <button class="tab" data-view="stores">Stores</button>
+</nav>
+
+<main>
+
+  <!-- SCAN VIEW -->
+  <section id="scan" class="view active">
+    <div class="card">
+      <h2>1. Choose entry type</h2>
+      <div class="mode-toggle">
+        <button class="mode-btn stock selected" id="modeStockBtn">📦 Inventory (Stock)</button>
+        <button class="mode-btn sale" id="modeSaleBtn">🛒 Sale (Benta)</button>
+      </div>
+
+      <h2>2. Scan the product's QR / barcode</h2>
+      <div id="reader"></div>
+      <p class="scan-hint">Point the camera at the label stuck on the product. Pwede mong i-scan nang paulit-ulit para magdagdag ng maraming item bago i-save.</p>
+      <button class="btn ghost" id="manualBtn" style="margin-top:10px;">Or enter code manually</button>
+    </div>
+
+    <div class="card" id="cartCard" style="display:none;">
+      <h2>🧾 Kasalukuyang Transaksyon (<span id="cartCount">0</span> item)</h2>
+      <div id="cartList"></div>
+      <div class="btn-row" style="margin-top:10px;">
+        <button class="btn ghost small" id="clearCartBtn">I-clear</button>
+        <button class="btn small" id="saveCartBtn">I-save ang Transaksyon</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD VIEW -->
+  <section id="dashboard" class="view">
+    <div class="stat-grid" style="margin-bottom:14px;">
+      <div class="stat"><div class="num" id="statStock">0</div><div class="label">Current Stock Items</div></div>
+      <div class="stat"><div class="num" id="statProfit">₱0</div><div class="label">Total Profit (Today)</div></div>
+      <div class="stat"><div class="num" id="statSalesToday">0</div><div class="label">Sales Today</div></div>
+      <div class="stat"><div class="num" id="statLow">0</div><div class="label">Low Stock Items</div></div>
+    </div>
+    <div class="card">
+      <h2>🏆 Top Selling Products</h2>
+      <div id="topList"><p class="empty">No sales recorded yet.</p></div>
+    </div>
+    <div class="card">
+      <h2>Recent Activity</h2>
+      <div id="activityList"><p class="empty">Nothing logged yet — scan a product to start.</p></div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS VIEW -->
+  <section id="products" class="view">
+    <div class="card">
+      <h2>Add / Edit Product</h2>
+      <label>Product Code (what the QR/barcode encodes)</label>
+      <input id="pCode" placeholder="e.g. SARISMART-P006">
+      <label>Product Name</label>
+      <input id="pName" placeholder="e.g. Nescafe 3in1">
+      <label>Cost Price (₱)</label>
+      <input id="pCost" type="number" step="0.01" placeholder="0.00">
+      <label>Retail Price (₱)</label>
+      <input id="pPrice" type="number" step="0.01" placeholder="0.00">
+      <label>Starting Stock</label>
+      <input id="pStock" type="number" placeholder="0">
+      <button class="btn" id="saveProdBtn">Save Product</button>
+    </div>
+    <div class="card">
+      <h2>Store Inventory</h2>
+      <div id="prodList"></div>
+    </div>
+  </section>
+
+  <!-- QR VIEW -->
+  <section id="qr" class="view">
+    <div class="card">
+      <h2>Generate a QR label</h2>
+      <label>Select product</label>
+      <select id="qrProductSelect"></select>
+      <button class="btn gold" id="genQrBtn">Generate QR Code</button>
+      <div class="qr-box" id="qrOutput"></div>
+      <p class="scan-hint" id="qrCodeText"></p>
+      <button class="btn ghost" id="printQrBtn" style="margin-top:10px;display:none;">Print this label</button>
+    </div>
+    <div class="card">
+      <p class="note">Need labels for several products at once? Open <strong>qr-codes.html</strong> from this project — it prints a ready sheet of 5 sample product QR codes you can cut out and stick on items.</p>
+    </div>
+  </section>
+
+  <!-- STORES VIEW -->
+  <section id="stores" class="view">
+    <div class="card">
+      <h2>🏪 Mga Tindahan</h2>
+      <p class="note" style="margin-bottom:10px;">Bawat tindahan ay may sariling unique QR code at hiwalay na inventory/sales data. I-scan o i-tap ang QR ng isang tindahan para lumipat doon.</p>
+      <div id="storeList"></div>
+    </div>
+    <div class="card">
+      <h2>Magdagdag ng Bagong Tindahan</h2>
+      <label>Pangalan ng Tindahan</label>
+      <input id="newStoreName" placeholder="hal. SariSmart Branch 2">
+      <button class="btn" id="addStoreBtn">Gumawa ng Tindahan + QR</button>
+    </div>
+    <div class="card">
+      <h2>💾 Backup / Restore ng Data</h2>
+      <p class="note">Gumagana ang app offline gamit ang local storage ng browser mo — hindi ito nawawala kahit walang internet. Walang live server kaya walang automatic sync sa ibang device, pero pwede kang mag-export ng backup file at i-import ito sa ibang phone o browser.</p>
+      <div class="btn-row" style="margin-top:10px;">
+        <button class="btn ghost small" id="exportBtn">I-export (JSON)</button>
+        <button class="btn small" id="importBtn">I-import</button>
+      </div>
+      <input type="file" id="importFile" accept="application/json" style="display:none;">
+    </div>
+  </section>
+
+</main>
+
+<div id="toast"></div>
+
+<script>
+/* =========================================================
+   MULTI-STORE SUPPORT
+   ========================================================= */
+const STORES_KEY = 'sarismart_stores_v1';
+const ACTIVE_STORE_KEY = 'sarismart_active_store';
+const STORE_QR_PREFIX = 'SARISMART-STORE:';
+
+function genStoreCode(){
+  return 'STORE-' + Math.random().toString(36).slice(2,6).toUpperCase();
+}
+function loadStores(){
+  const raw = localStorage.getItem(STORES_KEY);
+  if(raw) return JSON.parse(raw);
+  const seed = [{ code: genStoreCode(), name: 'Main Store' }];
+  localStorage.setItem(STORES_KEY, JSON.stringify(seed));
+  return seed;
+}
+function saveStores(stores){ localStorage.setItem(STORES_KEY, JSON.stringify(stores)); }
+let stores = loadStores();
+
+function getActiveStoreCode(){
+  let code = localStorage.getItem(ACTIVE_STORE_KEY);
+  if(!code || !stores.find(s=>s.code===code)) code = stores[0].code;
+  localStorage.setItem(ACTIVE_STORE_KEY, code);
+  return code;
+}
+let activeStoreCode = getActiveStoreCode();
+
+function dbKeyFor(code){ return 'sarismart_data_v1_' + code; }
+
+/* ---------- Storage helpers (per-store) ---------- */
+function loadDB(code){
+  const raw = localStorage.getItem(dbKeyFor(code));
+  if(raw) return JSON.parse(raw);
+  const isFirstStore = stores[0] && stores[0].code === code;
+  const seed = {
+    products: isFirstStore ? [
+      {code:'SARISMART-P001', name:'Nescafe 3in1', cost:6, price:8, stock:50},
+      {code:'SARISMART-P002', name:'Kopiko Blanca', cost:5, price:7, stock:40},
+      {code:'SARISMART-P003', name:'Lucky Me Pancit Canton', cost:11, price:14, stock:30},
+      {code:'SARISMART-P004', name:'Coke 1L', cost:35, price:45, stock:20},
+      {code:'SARISMART-P005', name:'Purefoods Corned Beef', cost:45, price:58, stock:15}
+    ] : [],
+    transactions: []
+  };
+  saveDB(seed, code);
+  return seed;
+}
+function saveDB(dbObj, code){ localStorage.setItem(dbKeyFor(code || activeStoreCode), JSON.stringify(dbObj)); }
+let db = loadDB(activeStoreCode);
+
+function genTxnId(){
+  const d = new Date();
+  const ymd = d.getFullYear().toString() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0');
+  const rand = Math.floor(1000 + Math.random()*9000);
+  return 'TXN-' + ymd + '-' + rand;
+}
+
+function switchStore(code){
+  const store = stores.find(s=>s.code===code);
+  if(!store){ toast('Hindi nakita ang tindahan na iyon'); return; }
+  activeStoreCode = code;
+  localStorage.setItem(ACTIVE_STORE_KEY, code);
+  db = loadDB(code);
+  document.getElementById('activeStoreLabel').textContent = store.name;
+  clearCart();
+  renderDashboard();
+  renderProducts();
+  renderQrSelect();
+  renderStores();
+  toast('Lumipat sa: ' + store.name);
+}
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(t._h);
+  t._h = setTimeout(()=>t.style.display='none', 2600);
+}
+
+/* ---------- Navigation ---------- */
+document.querySelectorAll('.tab').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.view).classList.add('active');
+    if(btn.dataset.view==='dashboard') renderDashboard();
+    if(btn.dataset.view==='products') renderProducts();
+    if(btn.dataset.view==='qr') renderQrSelect();
+    if(btn.dataset.view==='stores') renderStores();
+  });
+});
+
+/* ---------- Scan mode ---------- */
+let currentMode = 'stock';
+document.getElementById('modeStockBtn').addEventListener('click', ()=>setMode('stock'));
+document.getElementById('modeSaleBtn').addEventListener('click', ()=>setMode('sale'));
+function setMode(m){
+  currentMode = m;
+  document.getElementById('modeStockBtn').classList.toggle('selected', m==='stock');
+  document.getElementById('modeSaleBtn').classList.toggle('selected', m==='sale');
+}
+
+/* ---------- Scanner ---------- */
+let html5QrCode;
+function startScanner(){
+  html5QrCode = new Html5Qrcode("reader");
+  const config = { fps: 10, qrbox: 220 };
+  html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess)
+    .catch(()=>{ document.getElementById('reader').innerHTML =
+      '<p class="empty">Camera not available. Use "enter code manually" below.</p>'; });
+}
+function onScanSuccess(decodedText){
+  handleCode(decodedText);
+}
+document.getElementById('manualBtn').addEventListener('click', ()=>{
+  const code = prompt('Enter product or store code:');
+  if(code) handleCode(code.trim());
+});
+
+/* ---------- Multi-item cart (1 scan = add more items) ---------- */
+let cart = [];
+
+function handleCode(code){
+  // Store-switch QR
+  if(code.startsWith(STORE_QR_PREFIX)){
+    const storeCode = code.slice(STORE_QR_PREFIX.length);
+    switchStore(storeCode);
+    return;
+  }
+
+  toast('Scanned: ' + code);
+  let product = db.products.find(p=>p.code===code);
+  if(!product){
+    const name = prompt('New product detected ('+code+'). Enter product name:');
+    if(!name) return;
+    const cost = parseFloat(prompt('Cost / wholesale price (₱):') || '0');
+    const price = parseFloat(prompt('Retail selling price (₱):') || '0');
+    product = { code, name, cost, price, stock:0 };
+    db.products.push(product);
+    saveDB(db);
+  }
+  const qty = parseInt(prompt((currentMode==='stock' ? 'Quantity received (Stock):' : 'Quantity sold (Benta):')) || '0', 10);
+  if(!qty || qty<=0) return;
+
+  cart.push({ code: product.code, name: product.name, cost: product.cost, price: product.price, qty, type: currentMode });
+  renderCart();
+  toast(`Idinagdag: ${qty} × ${product.name}. Puwede ka pang mag-scan ng iba.`);
+}
+
+function renderCart(){
+  const card = document.getElementById('cartCard');
+  const list = document.getElementById('cartList');
+  document.getElementById('cartCount').textContent = cart.length;
+  if(!cart.length){ card.style.display = 'none'; return; }
+  card.style.display = 'block';
+  list.innerHTML = cart.map((item, idx) => {
+    const label = item.type==='stock' ? '📦 Stock' : '🛒 Benta';
+    return `<div class="cart-item"><span>${label}: ${item.qty} × ${item.name}</span><button data-idx="${idx}" class="removeCartBtn">✕</button></div>`;
+  }).join('');
+  list.querySelectorAll('.removeCartBtn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      cart.splice(parseInt(btn.dataset.idx,10), 1);
+      renderCart();
+    });
+  });
+}
+
+function clearCart(){ cart = []; renderCart(); }
+
+document.getElementById('clearCartBtn').addEventListener('click', clearCart);
+
+document.getElementById('saveCartBtn').addEventListener('click', ()=>{
+  if(!cart.length) return;
+  const txnId = genTxnId();
+  const now = new Date().toISOString();
+  let totalProfit = 0;
+
+  cart.forEach(item => {
+    const product = db.products.find(p=>p.code===item.code);
+    if(!product) return;
+    if(item.type==='stock'){
+      product.stock += item.qty;
+      db.transactions.push({ txnId, date: now, type:'stock', code:item.code, name:item.name, qty:item.qty, amount:item.qty*item.cost, profit:0 });
+    } else {
+      product.stock -= item.qty;
+      const profit = item.qty * (item.price - item.cost);
+      totalProfit += profit;
+      db.transactions.push({ txnId, date: now, type:'sale', code:item.code, name:item.name, qty:item.qty, amount:item.qty*item.price, profit });
+    }
+  });
+  saveDB(db);
+  toast(`Na-save ang ${txnId} (${cart.length} item${cart.length>1?'s':''})`);
+  clearCart();
+  renderDashboard();
+  renderProducts();
+});
+
+/* ---------- Dashboard ---------- */
+function renderDashboard(){
+  const today = new Date().toDateString();
+  const todaysTx = db.transactions.filter(t=> new Date(t.date).toDateString()===today);
+  const totalStock = db.products.reduce((s,p)=>s+p.stock,0);
+  const profitToday = todaysTx.filter(t=>t.type==='sale').reduce((s,t)=>s+t.profit,0);
+  const salesToday = todaysTx.filter(t=>t.type==='sale').reduce((s,t)=>s+t.qty,0);
+  const lowStock = db.products.filter(p=>p.stock<=5).length;
+
+  document.getElementById('statStock').textContent = totalStock;
+  document.getElementById('statProfit').textContent = '₱' + profitToday.toFixed(2);
+  document.getElementById('statSalesToday').textContent = salesToday;
+  document.getElementById('statLow').textContent = lowStock;
+
+  const salesByProduct = {};
+  db.transactions.filter(t=>t.type==='sale').forEach(t=>{
+    salesByProduct[t.name] = (salesByProduct[t.name]||0) + t.qty;
+  });
+  const top = Object.entries(salesByProduct).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const topList = document.getElementById('topList');
+  topList.innerHTML = top.length ? top.map(([name,qty],i)=>
+    `<div class="prod-row"><span class="name">${i+1}. ${name}</span><span class="qty-badge">${qty} sold</span></div>`
+  ).join('') : '<p class="empty">No sales recorded yet.</p>';
+
+  const recent = [...db.transactions].reverse().slice(0,10);
+  const actList = document.getElementById('activityList');
+  actList.innerHTML = recent.length ? recent.map(t=>{
+    const d = new Date(t.date);
+    const label = t.type==='stock' ? '📦 Stocked' : '🛒 Sold';
+    const txnBadge = t.txnId ? `<span class="txn-tag">${t.txnId}</span>` : '';
+    return `<div class="prod-row"><span class="name">${txnBadge}${label} ${t.qty} × ${t.name}</span><span class="meta">${d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span></div>`;
+  }).join('') : '<p class="empty">Nothing logged yet — scan a product to start.</p>';
+}
+
+/* ---------- Products ---------- */
+document.getElementById('saveProdBtn').addEventListener('click', ()=>{
+  const code = document.getElementById('pCode').value.trim();
+  const name = document.getElementById('pName').value.trim();
+  const cost = parseFloat(document.getElementById('pCost').value)||0;
+  const price = parseFloat(document.getElementById('pPrice').value)||0;
+  const stock = parseInt(document.getElementById('pStock').value)||0;
+  if(!code || !name){ toast('Code and name are required'); return; }
+  let product = db.products.find(p=>p.code===code);
+  if(product){
+    Object.assign(product, {name,cost,price,stock});
+    toast('Product updated');
+  } else {
+    db.products.push({code,name,cost,price,stock});
+    toast('Product added');
+  }
+  saveDB(db);
+  ['pCode','pName','pCost','pPrice','pStock'].forEach(id=>document.getElementById(id).value='');
+  renderProducts();
+});
+
+function renderProducts(){
+  const list = document.getElementById('prodList');
+  if(!db.products.length){ list.innerHTML = '<p class="empty">No products yet.</p>'; return; }
+  list.innerHTML = db.products.map(p=>`
+    <div class="prod-row">
+      <span><span class="name">${p.name}</span><br><span class="meta">${p.code} · ₱${p.price} retail</span></span>
+      <span class="qty-badge ${p.stock<=5?'low':''}">${p.stock} in stock</span>
+    </div>`).join('');
+}
+
+/* ---------- QR generator (products, in-app) ---------- */
+function renderQrSelect(){
+  const sel = document.getElementById('qrProductSelect');
+  sel.innerHTML = db.products.map(p=>`<option value="${p.code}">${p.name} (${p.code})</option>`).join('');
+}
+document.getElementById('genQrBtn').addEventListener('click', ()=>{
+  const code = document.getElementById('qrProductSelect').value;
+  const out = document.getElementById('qrOutput');
+  out.innerHTML = '';
+  new QRCode(out, { text: code, width:180, height:180, colorDark:"#7A1E2B", colorLight:"#ffffff" });
+  document.getElementById('qrCodeText').textContent = code;
+  document.getElementById('printQrBtn').style.display = 'block';
+});
+document.getElementById('printQrBtn').addEventListener('click', ()=> window.print());
+
+/* ---------- Stores ---------- */
+function renderStores(){
+  document.getElementById('activeStoreLabel').textContent =
+    (stores.find(s=>s.code===activeStoreCode) || {}).name || 'Main Store';
+
+  const list = document.getElementById('storeList');
+  list.innerHTML = stores.map(s => {
+    const isActive = s.code === activeStoreCode;
+    return `
+    <div class="card" style="margin-bottom:10px;padding:12px;${isActive ? 'border-color:var(--gold);border-width:2px;' : ''}">
+      <div class="prod-row" style="border-bottom:none;padding:0 0 8px;">
+        <span><span class="name">${s.name}</span> ${isActive ? '<span class="txn-tag">AKTIBO</span>' : ''}<br><span class="meta">${s.code}</span></span>
+      </div>
+      <div class="qr-box" id="storeQr-${s.code}" style="margin-top:0;"></div>
+      <div class="btn-row" style="margin-top:8px;">
+        ${isActive ? '' : `<button class="btn small switchStoreBtn" data-code="${s.code}">Gamitin</button>`}
+        <button class="btn ghost small printStoreBtn" data-code="${s.code}">I-print ang QR</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  stores.forEach(s => {
+    const el = document.getElementById('storeQr-' + s.code);
+    if(el) new QRCode(el, { text: STORE_QR_PREFIX + s.code, width:140, height:140, colorDark:"#7A1E2B", colorLight:"#ffffff" });
+  });
+
+  list.querySelectorAll('.switchStoreBtn').forEach(btn=>{
+    btn.addEventListener('click', ()=> switchStore(btn.dataset.code));
+  });
+  list.querySelectorAll('.printStoreBtn').forEach(btn=>{
+    btn.addEventListener('click', ()=> window.print());
+  });
+}
+
+document.getElementById('addStoreBtn').addEventListener('click', ()=>{
+  const name = document.getElementById('newStoreName').value.trim();
+  if(!name){ toast('Ilagay ang pangalan ng tindahan'); return; }
+  const code = genStoreCode();
+  stores.push({ code, name });
+  saveStores(stores);
+  document.getElementById('newStoreName').value = '';
+  renderStores();
+  toast('Nagawa ang tindahan: ' + name);
+});
+
+/* ---------- Backup / Restore ---------- */
+document.getElementById('exportBtn').addEventListener('click', ()=>{
+  const payload = { store: stores.find(s=>s.code===activeStoreCode), data: db };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const dateStr = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = `sarismart-backup-${activeStoreCode}-${dateStr}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('Na-export ang backup file');
+});
+
+document.getElementById('importBtn').addEventListener('click', ()=>{
+  document.getElementById('importFile').click();
+});
+document.getElementById('importFile').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const payload = JSON.parse(reader.result);
+      const incoming = payload.data || payload;
+      if(!incoming.products || !incoming.transactions) throw new Error('bad format');
+      db = incoming;
+      saveDB(db);
+      renderDashboard();
+      renderProducts();
+      renderQrSelect();
+      toast('Na-import ang data');
+    }catch(err){
+      toast('Hindi mabasa ang file — siguraduhing tamang backup file ito');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+/* ---------- PWA install support ---------- */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+  });
+}
+
+/* ---------- Init ---------- */
+startScanner();
+renderDashboard();
+renderProducts();
+renderQrSelect();
+renderStores();
+</script>
+</body>
+</html>
