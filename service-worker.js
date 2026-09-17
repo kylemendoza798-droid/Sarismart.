@@ -1,9 +1,9 @@
-const CACHE_NAME = 'sarismart-cache-v2';
+const CACHE_NAME = 'sarismart-cache-v4';   // <-- updated version
 const ASSETS = [
   './',
   './index.html',
-  './barcode-labels.html',  // Updated filename
-  './logo.png',             // Added logo
+  './barcode-labels.html',   // bagong filename ng dating qr-codes-1.html
+  './logo.png',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png'
