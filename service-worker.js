@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sarismart-cache-v4';   // <-- updated version
+const CACHE_NAME = 'sarismart-cache-v5';   // <-- updated version
 const ASSETS = [
   './',
   './index.html',
