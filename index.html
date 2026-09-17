@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SariSmart">
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 <style>
   :root{
     --maroon:#7A1E2B;
@@ -244,7 +244,7 @@
   <button class="tab active" data-view="scan">Scan</button>
   <button class="tab" data-view="dashboard">Dashboard</button>
   <button class="tab" data-view="products">Products</button>
-  <button class="tab" data-view="qr">QR Labels</button>
+  <button class="tab" data-view="qr">Labels</button>
   <button class="tab" data-view="stores">Stores</button>
 </nav>
 
@@ -256,21 +256,21 @@
       <h2>1. Choose entry type</h2>
       <div class="mode-toggle">
         <button class="mode-btn stock selected" id="modeStockBtn">📦 Inventory (Stock)</button>
-        <button class="mode-btn sale" id="modeSaleBtn">🛒 Sale (Benta)</button>
+        <button class="mode-btn sale" id="modeSaleBtn">🛒 Sale</button>
       </div>
 
-      <h2>2. Scan the product's QR / barcode</h2>
+      <h2>2. Scan the product's barcode</h2>
       <div id="reader"></div>
-      <p class="scan-hint">Point the camera at the label stuck on the product. Pwede mong i-scan nang paulit-ulit para magdagdag ng maraming item bago i-save.</p>
-      <button class="btn ghost" id="manualBtn" style="margin-top:10px;">Or enter code manually</button>
+      <p class="scan-hint">Point the camera at the barcode. You can scan multiple items before saving.</p>
+      <button class="btn ghost" id="manualBtn" style="margin-top:10px;">Or enter barcode manually</button>
     </div>
 
     <div class="card" id="cartCard" style="display:none;">
-      <h2>🧾 Kasalukuyang Transaksyon (<span id="cartCount">0</span> item)</h2>
+      <h2>🧾 Current Transaction (<span id="cartCount">0</span> item)</h2>
       <div id="cartList"></div>
       <div class="btn-row" style="margin-top:10px;">
-        <button class="btn ghost small" id="clearCartBtn">I-clear</button>
-        <button class="btn small" id="saveCartBtn">I-save ang Transaksyon</button>
+        <button class="btn ghost small" id="clearCartBtn">Clear</button>
+        <button class="btn small" id="saveCartBtn">Save Transaction</button>
       </div>
     </div>
   </section>
@@ -278,7 +278,7 @@
   <!-- DASHBOARD VIEW -->
   <section id="dashboard" class="view">
     <div class="stat-grid" style="margin-bottom:14px;">
-      <div class="stat"><div class="num" id="statStock">0</div><div class="label">Current Stock Items</div></div>
+      <div class="stat"><div class="num" id="statStock">0</div><div class="label">Total Stock Items</div></div>
       <div class="stat"><div class="num" id="statProfit">₱0</div><div class="label">Total Profit (Today)</div></div>
       <div class="stat"><div class="num" id="statSalesToday">0</div><div class="label">Sales Today</div></div>
       <div class="stat"><div class="num" id="statLow">0</div><div class="label">Low Stock Items</div></div>
@@ -297,10 +297,10 @@
   <section id="products" class="view">
     <div class="card">
       <h2>Add / Edit Product</h2>
-      <label>Product Code (what the QR/barcode encodes)</label>
-      <input id="pCode" placeholder="e.g. SARISMART-P006">
+      <label>Product Barcode</label>
+      <input id="pCode" placeholder="e.g. 4801668602034">
       <label>Product Name</label>
-      <input id="pName" placeholder="e.g. Nescafe 3in1">
+      <input id="pName" placeholder="e.g. Datu Puti Soy Sauce">
       <label>Cost Price (₱)</label>
       <input id="pCost" type="number" step="0.01" placeholder="0.00">
       <label>Retail Price (₱)</label>
@@ -315,41 +315,41 @@
     </div>
   </section>
 
-  <!-- QR VIEW -->
+  <!-- LABELS VIEW -->
   <section id="qr" class="view">
     <div class="card">
-      <h2>Generate a QR label</h2>
+      <h2>Generate a Barcode Label</h2>
       <label>Select product</label>
       <select id="qrProductSelect"></select>
-      <button class="btn gold" id="genQrBtn">Generate QR Code</button>
+      <button class="btn gold" id="genQrBtn">Generate Barcode</button>
       <div class="qr-box" id="qrOutput"></div>
       <p class="scan-hint" id="qrCodeText"></p>
       <button class="btn ghost" id="printQrBtn" style="margin-top:10px;display:none;">Print this label</button>
     </div>
     <div class="card">
-      <p class="note">Need labels for several products at once? Open <strong>qr-codes.html</strong> from this project — it prints a ready sheet of 5 sample product QR codes you can cut out and stick on items.</p>
+      <p class="note">Need labels for multiple products at once? Open <strong>barcode-labels.html</strong> from this project — it prints a ready sheet of all product barcodes you can cut out and stick on items.</p>
     </div>
   </section>
 
   <!-- STORES VIEW -->
   <section id="stores" class="view">
     <div class="card">
-      <h2>🏪 Mga Tindahan</h2>
-      <p class="note" style="margin-bottom:10px;">Bawat tindahan ay may sariling unique QR code at hiwalay na inventory/sales data. I-scan o i-tap ang QR ng isang tindahan para lumipat doon.</p>
+      <h2>🏪 Stores</h2>
+      <p class="note" style="margin-bottom:10px;">Each store has its own unique QR code and separate inventory/sales data. Scan or tap a store's QR code to switch to it.</p>
       <div id="storeList"></div>
     </div>
     <div class="card">
-      <h2>Magdagdag ng Bagong Tindahan</h2>
-      <label>Pangalan ng Tindahan</label>
-      <input id="newStoreName" placeholder="hal. SariSmart Branch 2">
-      <button class="btn" id="addStoreBtn">Gumawa ng Tindahan + QR</button>
+      <h2>Add New Store</h2>
+      <label>Store Name</label>
+      <input id="newStoreName" placeholder="e.g. SariSmart Branch 2">
+      <button class="btn" id="addStoreBtn">Create Store + QR</button>
     </div>
     <div class="card">
-      <h2>💾 Backup / Restore ng Data</h2>
-      <p class="note">Gumagana ang app offline gamit ang local storage ng browser mo — hindi ito nawawala kahit walang internet. Walang live server kaya walang automatic sync sa ibang device, pero pwede kang mag-export ng backup file at i-import ito sa ibang phone o browser.</p>
+      <h2>💾 Backup / Restore Data</h2>
+      <p class="note">The app works offline using your browser's local storage. Data will not disappear even without an internet connection. There is no live server, so there is no automatic sync across devices, but you can export a backup file and import it on another phone or browser.</p>
       <div class="btn-row" style="margin-top:10px;">
-        <button class="btn ghost small" id="exportBtn">I-export (JSON)</button>
-        <button class="btn small" id="importBtn">I-import</button>
+        <button class="btn ghost small" id="exportBtn">Export (JSON)</button>
+        <button class="btn small" id="importBtn">Import</button>
       </div>
       <input type="file" id="importFile" accept="application/json" style="display:none;">
     </div>
@@ -395,14 +395,65 @@ function loadDB(code){
   const raw = localStorage.getItem(dbKeyFor(code));
   if(raw) return JSON.parse(raw);
   const isFirstStore = stores[0] && stores[0].code === code;
+  
+  // User provided barcodes, initial stock set to 0
+  const seedProducts = [
+    { code: '4801668602034', name: 'Datu Puti Soy Sauce (200ml)', cost: 0, price: 0, stock: 0 },
+    { code: '4800361410816', name: 'Bear Brand Fortified Powdered Milk Drink (33g)', cost: 0, price: 0, stock: 0 },
+    { code: '7622300559991', name: 'Tang Orange Powdered Drink Mix (19g)', cost: 0, price: 0, stock: 0 },
+    { code: '748485700038', name: '555 Tuna Caldereta (155g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800514221245', name: 'Fresh Eggs One Dozen (12 pcs)', cost: 0, price: 0, stock: 0 },
+    { code: '4805358373037', name: 'Magnolia Cheezee (160g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800361413503', name: 'Nestlé Milo Activ-Go Chocolate Malt Powder (24g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800092660641', name: 'Rebisco Choco Mucho Milk Chocolate (30g)', cost: 0, price: 0, stock: 0 },
+    { code: '4801668600641', name: 'Mang Tomas All-Around Sarsa (100g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800888289551', name: 'Surf Powder Detergent Purple Blooms (65g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800049720114', name: "Nature's Spring Purified Drinking Water (500ml)", cost: 0, price: 0, stock: 0 },
+    { code: '4800888177124', name: 'Surf Powder Detergent Blossom Fresh (74g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800888209566', name: 'Cream Silk Triple Keratin Rescue Conditioner (10ml)', cost: 0, price: 0, stock: 0 },
+    { code: '8717163616444', name: 'Dove Beauty Bar (135g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800888151704', name: 'Clear Men Anti-Dandruff Shampoo (12ml)', cost: 0, price: 0, stock: 0 },
+    { code: '4800888139306', name: 'Cream Silk Conditioner (13ml)', cost: 0, price: 0, stock: 0 },
+    { code: '8998666001702', name: 'Kopiko 3 in 1 Strong Coffee Mix (20g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800016021169', name: 'Great Taste Original Coffee Twin Pack (33g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800216110014', name: 'Clover chips cheese flavor (85g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800194104968', name: 'Oishi prawn crackers spicy flavor (24g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800194177962', name: 'Oishi prawn crackers spicy flavor (90g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800194177092', name: 'Kirei yummy flakes shrimp flavor (60g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800523220048', name: 'peewee sizzling bbq flavored snack (60g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800194101134', name: 'oishi cracklings salt and vinegar (50g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800024562692', name: 'Del Monte 100% pineapple juice with vitamins A-C-E (220ml)', cost: 0, price: 0, stock: 0 },
+    { code: '4800024562616', name: 'Del Monte 100% pineapple juice fiber enriched (220ml)', cost: 0, price: 0, stock: 0 },
+    { code: '4800024572981', name: 'Del Monte 100% pineapple juice heart smart (220ml)', cost: 0, price: 0, stock: 0 },
+    { code: '4804888889728', name: 'Zest-O Big quick punch orange drink (250ml)', cost: 0, price: 0, stock: 0 },
+    { code: '4804888900133', name: 'Zest-O Big quick punch mango drink (250ml)', cost: 0, price: 0, stock: 0 },
+    { code: '4804888889766', name: 'Zest-O Big quick punch grape drink (250ml)', cost: 0, price: 0, stock: 0 },
+    { code: '4801688124011', name: 'Regent Kobi french fried style potato flavor snack (40g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800194106030', name: 'Oishi potato fries tomato ketchup flavor (50g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800194177771', name: 'Oishi potato fries cheese flavor (90g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800016661099', name: "Jack 'n Jill Roller Coaster cheddar cheese flavored potato snack (85g)", cost: 0, price: 0, stock: 0 },
+    { code: '4800194136648', name: 'Oishi Fishda fish kropeck (22g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800194152891', name: "Marty's Cracklin' vegetarian chicharon spicy vinegar flavor (26g)", cost: 0, price: 0, stock: 0 },
+    { code: '4800016110542', name: "Jack 'n Jill Mang Juan chicharron espesyal suka't sili (26g)", cost: 0, price: 0, stock: 0 },
+    { code: '4800016110535', name: "Jack 'n Jill Mang Juan chicharron sukang paombong (26g)", cost: 0, price: 0, stock: 0 },
+    { code: '4800194118149', name: 'Oishi Miggos thin traditional style tortilla chips nacho cheese flavor (105g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800016663802', name: "Jack 'n Jill Nova multigrain snacks country cheddar flavor (40g)", cost: 0, price: 0, stock: 0 },
+    { code: '4800016663505', name: "Jack 'n Jill Nova multigrain snacks country cheddar flavor (78g)", cost: 0, price: 0, stock: 0 },
+    { code: '4807770270017', name: 'Lucky Me! Pancit Canton Original (80g)', cost: 0, price: 0, stock: 0 },
+    { code: '4807770270055', name: 'Lucky Me! Pancit Canton Kalamansi (80g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800361295246', name: 'Nescafé Original 3-in-1 (28g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800016022265', name: 'Great Taste White Twin Pack (50g)', cost: 0, price: 0, stock: 0 },
+    { code: '748485100081', name: 'Century Tuna Flakes in Oil (180g)', cost: 0, price: 0, stock: 0 },
+    { code: '748485800035', name: 'Argentina corned beef (260g)', cost: 0, price: 0, stock: 0 },
+    { code: '4800344001628', name: 'Silver Swan Soy Sauce (1000ml)', cost: 0, price: 0, stock: 0 },
+    { code: '737964000127', name: 'Datu Puti Vinegar (2L)', cost: 0, price: 0, stock: 0 },
+    { code: '4800611546760', name: 'Cobra Energy Drink (350ml)', cost: 0, price: 0, stock: 0 },
+    { code: '750515018402', name: 'SkyFlakes Crackers (25g)', cost: 0, price: 0, stock: 0 },
+    { code: '4902430327428', name: 'Safeguard Bar Arctic Fresh (55g)', cost: 0, price: 0, stock: 0 }
+  ];
+
   const seed = {
-    products: isFirstStore ? [
-      {code:'SARISMART-P001', name:'Nescafe 3in1', cost:6, price:8, stock:50},
-      {code:'SARISMART-P002', name:'Kopiko Blanca', cost:5, price:7, stock:40},
-      {code:'SARISMART-P003', name:'Lucky Me Pancit Canton', cost:11, price:14, stock:30},
-      {code:'SARISMART-P004', name:'Coke 1L', cost:35, price:45, stock:20},
-      {code:'SARISMART-P005', name:'Purefoods Corned Beef', cost:45, price:58, stock:15}
-    ] : [],
+    products: isFirstStore ? seedProducts : [],
     transactions: []
   };
   saveDB(seed, code);
@@ -420,7 +471,7 @@ function genTxnId(){
 
 function switchStore(code){
   const store = stores.find(s=>s.code===code);
-  if(!store){ toast('Hindi nakita ang tindahan na iyon'); return; }
+  if(!store){ toast('Store not found'); return; }
   activeStoreCode = code;
   localStorage.setItem(ACTIVE_STORE_KEY, code);
   db = loadDB(code);
@@ -430,7 +481,7 @@ function switchStore(code){
   renderProducts();
   renderQrSelect();
   renderStores();
-  toast('Lumipat sa: ' + store.name);
+  toast('Switched to: ' + store.name);
 }
 
 function toast(msg){
@@ -469,7 +520,19 @@ function setMode(m){
 let html5QrCode;
 function startScanner(){
   html5QrCode = new Html5Qrcode("reader");
-  const config = { fps: 10, qrbox: 220 };
+  const config = { 
+    fps: 10, 
+    qrbox: { width: 250, height: 150 },
+    formatsToSupport: [
+      Html5QrcodeSupportedFormats.EAN_13,
+      Html5QrcodeSupportedFormats.EAN_8,
+      Html5QrcodeSupportedFormats.UPC_A,
+      Html5QrcodeSupportedFormats.UPC_E,
+      Html5QrcodeSupportedFormats.CODE_128,
+      Html5QrcodeSupportedFormats.CODE_39,
+      Html5QrcodeSupportedFormats.ITF
+    ]
+  };
   html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess)
     .catch(()=>{ document.getElementById('reader').innerHTML =
       '<p class="empty">Camera not available. Use "enter code manually" below.</p>'; });
@@ -478,11 +541,11 @@ function onScanSuccess(decodedText){
   handleCode(decodedText);
 }
 document.getElementById('manualBtn').addEventListener('click', ()=>{
-  const code = prompt('Enter product or store code:');
+  const code = prompt('Enter barcode:');
   if(code) handleCode(code.trim());
 });
 
-/* ---------- Multi-item cart (1 scan = add more items) ---------- */
+/* ---------- Multi-item cart ---------- */
 let cart = [];
 
 function handleCode(code){
@@ -504,12 +567,12 @@ function handleCode(code){
     db.products.push(product);
     saveDB(db);
   }
-  const qty = parseInt(prompt((currentMode==='stock' ? 'Quantity received (Stock):' : 'Quantity sold (Benta):')) || '0', 10);
+  const qty = parseInt(prompt((currentMode==='stock' ? 'Quantity received (Stock):' : 'Quantity sold (Sale):')) || '0', 10);
   if(!qty || qty<=0) return;
 
   cart.push({ code: product.code, name: product.name, cost: product.cost, price: product.price, qty, type: currentMode });
   renderCart();
-  toast(`Idinagdag: ${qty} × ${product.name}. Puwede ka pang mag-scan ng iba.`);
+  toast(`Added: ${qty} × ${product.name}. You can scan more items.`);
 }
 
 function renderCart(){
@@ -519,7 +582,7 @@ function renderCart(){
   if(!cart.length){ card.style.display = 'none'; return; }
   card.style.display = 'block';
   list.innerHTML = cart.map((item, idx) => {
-    const label = item.type==='stock' ? '📦 Stock' : '🛒 Benta';
+    const label = item.type==='stock' ? '📦 Stock' : '🛒 Sale';
     return `<div class="cart-item"><span>${label}: ${item.qty} × ${item.name}</span><button data-idx="${idx}" class="removeCartBtn">✕</button></div>`;
   }).join('');
   list.querySelectorAll('.removeCartBtn').forEach(btn=>{
@@ -554,7 +617,7 @@ document.getElementById('saveCartBtn').addEventListener('click', ()=>{
     }
   });
   saveDB(db);
-  toast(`Na-save ang ${txnId} (${cart.length} item${cart.length>1?'s':''})`);
+  toast(`Saved ${txnId} (${cart.length} item${cart.length>1?'s':''})`);
   clearCart();
   renderDashboard();
   renderProducts();
@@ -618,11 +681,68 @@ document.getElementById('saveProdBtn').addEventListener('click', ()=>{
 function renderProducts(){
   const list = document.getElementById('prodList');
   if(!db.products.length){ list.innerHTML = '<p class="empty">No products yet.</p>'; return; }
+  
   list.innerHTML = db.products.map(p=>`
-    <div class="prod-row">
-      <span><span class="name">${p.name}</span><br><span class="meta">${p.code} · ₱${p.price} retail</span></span>
-      <span class="qty-badge ${p.stock<=5?'low':''}">${p.stock} in stock</span>
+    <div class="prod-row" style="flex-direction:column; align-items:flex-start; gap:8px;">
+      <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+        <span><span class="name">${p.name}</span><br><span class="meta">${p.code} · ₱${p.price} retail</span></span>
+        <span class="qty-badge ${p.stock<=5?'low':''}">${p.stock} in stock</span>
+      </div>
+      <div class="btn-row" style="width:100%; gap:5px;">
+        <button class="btn small minus-btn" data-code="${p.code}" style="flex:1; background:#B23A3A;">-</button>
+        <button class="btn small plus-btn" data-code="${p.code}" style="flex:1; background:#3E7A47;">+</button>
+        <button class="btn ghost small edit-btn" data-code="${p.code}" style="flex:2;">Edit Details</button>
+      </div>
     </div>`).join('');
+
+  // Increment Stock
+  list.querySelectorAll('.plus-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const code = e.target.dataset.code;
+      const product = db.products.find(p => p.code === code);
+      if(product) {
+        product.stock += 1;
+        saveDB(db);
+        renderProducts();
+        renderDashboard();
+        toast(`Added 1 stock to ${product.name}`);
+      }
+    });
+  });
+
+  // Decrement Stock
+  list.querySelectorAll('.minus-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const code = e.target.dataset.code;
+      const product = db.products.find(p => p.code === code);
+      if(product && product.stock > 0) {
+        product.stock -= 1;
+        saveDB(db);
+        renderProducts();
+        renderDashboard();
+        toast(`Removed 1 stock from ${product.name}`);
+      } else {
+        toast('Stock cannot go below 0');
+      }
+    });
+  });
+
+  // Edit Details
+  list.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const code = e.target.dataset.code;
+      const product = db.products.find(p => p.code === code);
+      if(product) {
+        const newCost = parseFloat(prompt('Enter new Cost Price (₱):', product.cost) || product.cost);
+        const newPrice = parseFloat(prompt('Enter new Retail Price (₱):', product.price) || product.price);
+        product.cost = newCost;
+        product.price = newPrice;
+        saveDB(db);
+        renderProducts();
+        toast('Product details updated');
+      }
+    });
+  });
 }
 
 /* ---------- QR generator (products, in-app) ---------- */
@@ -634,7 +754,10 @@ document.getElementById('genQrBtn').addEventListener('click', ()=>{
   const code = document.getElementById('qrProductSelect').value;
   const out = document.getElementById('qrOutput');
   out.innerHTML = '';
-  new QRCode(out, { text: code, width:180, height:180, colorDark:"#7A1E2B", colorLight:"#ffffff" });
+  // Generate barcode instead of QR
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  out.appendChild(svg);
+  JsBarcode(svg, code, { format: "CODE128", width: 2, height: 60, displayValue: true });
   document.getElementById('qrCodeText').textContent = code;
   document.getElementById('printQrBtn').style.display = 'block';
 });
@@ -651,12 +774,12 @@ function renderStores(){
     return `
     <div class="card" style="margin-bottom:10px;padding:12px;${isActive ? 'border-color:var(--gold);border-width:2px;' : ''}">
       <div class="prod-row" style="border-bottom:none;padding:0 0 8px;">
-        <span><span class="name">${s.name}</span> ${isActive ? '<span class="txn-tag">AKTIBO</span>' : ''}<br><span class="meta">${s.code}</span></span>
+        <span><span class="name">${s.name}</span> ${isActive ? '<span class="txn-tag">ACTIVE</span>' : ''}<br><span class="meta">${s.code}</span></span>
       </div>
       <div class="qr-box" id="storeQr-${s.code}" style="margin-top:0;"></div>
       <div class="btn-row" style="margin-top:8px;">
-        ${isActive ? '' : `<button class="btn small switchStoreBtn" data-code="${s.code}">Gamitin</button>`}
-        <button class="btn ghost small printStoreBtn" data-code="${s.code}">I-print ang QR</button>
+        ${isActive ? '' : `<button class="btn small switchStoreBtn" data-code="${s.code}">Use</button>`}
+        <button class="btn ghost small printStoreBtn" data-code="${s.code}">Print QR</button>
       </div>
     </div>`;
   }).join('');
@@ -676,13 +799,13 @@ function renderStores(){
 
 document.getElementById('addStoreBtn').addEventListener('click', ()=>{
   const name = document.getElementById('newStoreName').value.trim();
-  if(!name){ toast('Ilagay ang pangalan ng tindahan'); return; }
+  if(!name){ toast('Please enter store name'); return; }
   const code = genStoreCode();
   stores.push({ code, name });
   saveStores(stores);
   document.getElementById('newStoreName').value = '';
   renderStores();
-  toast('Nagawa ang tindahan: ' + name);
+  toast('Created store: ' + name);
 });
 
 /* ---------- Backup / Restore ---------- */
@@ -698,7 +821,7 @@ document.getElementById('exportBtn').addEventListener('click', ()=>{
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  toast('Na-export ang backup file');
+  toast('Exported backup file');
 });
 
 document.getElementById('importBtn').addEventListener('click', ()=>{
@@ -718,9 +841,9 @@ document.getElementById('importFile').addEventListener('change', (e)=>{
       renderDashboard();
       renderProducts();
       renderQrSelect();
-      toast('Na-import ang data');
+      toast('Imported data');
     }catch(err){
-      toast('Hindi mabasa ang file — siguraduhing tamang backup file ito');
+      toast('Could not read file — make sure it is a valid backup file');
     }
   };
   reader.readAsText(file);
