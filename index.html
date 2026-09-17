@@ -399,7 +399,6 @@ function loadDB(code){
   if(raw) return JSON.parse(raw);
   const isFirstStore = stores[0] && stores[0].code === code;
   
-  // User provided barcodes, initial stock set to 0
   const seedProducts = [
     { code: '4801668602034', name: 'Datu Puti Soy Sauce (200ml)', cost: 0, price: 0, stock: 0 },
     { code: '4800361410816', name: 'Bear Brand Fortified Powdered Milk Drink (33g)', cost: 0, price: 0, stock: 0 },
@@ -551,7 +550,10 @@ document.getElementById('manualBtn').addEventListener('click', ()=>{
 /* ---------- Multi-item cart ---------- */
 let cart = [];
 
-function handleCode(code){
+function handleCode(rawCode){
+  // Clean the scanned code (remove spaces, dashes, etc.)
+  const code = rawCode.toString().replace(/[^0-9A-Za-z]/g, '');
+
   // Store-switch QR
   if(code.startsWith(STORE_QR_PREFIX)){
     const storeCode = code.slice(STORE_QR_PREFIX.length);
@@ -904,4 +906,4 @@ renderQrSelect();
 renderStores();
 </script>
 </body>
-</html>
+  </html>
