@@ -14,6 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="SariSmart">
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
   :root{
     --maroon:#7A1E2B;
@@ -118,7 +119,7 @@
   .mode-btn.selected.sale{border-color:var(--gold);background:var(--gold);color:var(--maroon-dark);}
 
   #reader{width:100%;border-radius:8px;overflow:hidden;}
-  .scan-hint{text-align:center;font-size:.8rem;color:#8a7860;margin-top:8px;}
+  .scan-hint{text-align:center;font-size:.8rem;color:#8a7860;margin-top:8px;line-height:1.5;transition:color 0.2s;}
 
   input, select{
     width:100%;
@@ -154,9 +155,15 @@
     border-left:4px solid var(--gold);
     border-radius:8px;
     padding:12px;
+    cursor:pointer;
+    transition:transform 0.1s, box-shadow 0.1s;
+    position:relative;
   }
+  .stat:hover{transform:translateY(-2px);box-shadow:0 3px 8px rgba(0,0,0,.08);}
+  .stat:active{transform:translateY(0);}
   .stat .num{font-size:1.4rem;font-weight:800;color:var(--maroon);}
   .stat .label{font-size:.72rem;color:#8a7860;text-transform:uppercase;letter-spacing:.4px;}
+  .stat .tap-hint{font-size:.65rem;color:var(--gold);margin-top:4px;font-weight:600;}
 
   .prod-row{
     display:flex;
@@ -181,6 +188,7 @@
     white-space:nowrap;
   }
   .qty-badge.low{background:#FBE7E7;color:var(--red);border-color:#f0c6c6;}
+  .qty-badge.zero{background:#EEE;color:#999;border-color:#DDD;}
   .txn-tag{
     display:inline-block;
     font-size:.68rem;
@@ -227,6 +235,90 @@
   }
   .empty{text-align:center;color:#a3937a;font-size:.85rem;padding:20px 0;}
   .note{font-size:.8rem;color:#6b5a44;line-height:1.5;}
+
+  .info-banner{
+    background:#FFF9E6;
+    border:1px solid var(--gold);
+    border-left:4px solid var(--gold);
+    border-radius:8px;
+    padding:10px 12px;
+    margin-bottom:14px;
+    font-size:.78rem;
+    color:#6b5a44;
+    line-height:1.5;
+  }
+  .info-banner strong{color:var(--maroon);}
+
+  .filter-row{
+    display:flex;
+    gap:6px;
+    margin-bottom:12px;
+    overflow-x:auto;
+    padding-bottom:4px;
+  }
+  .filter-btn{
+    padding:6px 12px;
+    border-radius:20px;
+    border:1px solid var(--line);
+    background:#fff;
+    font-size:.75rem;
+    font-weight:600;
+    color:#6b5a44;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .filter-btn.active{
+    background:var(--maroon);
+    color:#fff;
+    border-color:var(--maroon);
+  }
+
+  .modal-overlay{
+    display:none;
+    position:fixed;
+    top:0; left:0; right:0; bottom:0;
+    background:rgba(0,0,0,.5);
+    z-index:100;
+    padding:20px;
+    align-items:flex-end;
+    justify-content:center;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:#fff;
+    border-radius:14px 14px 0 0;
+    width:100%;
+    max-width:520px;
+    max-height:80vh;
+    display:flex;
+    flex-direction:column;
+    animation:slideUp 0.2s ease-out;
+  }
+  @keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+  .modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:16px;
+    border-bottom:1px solid var(--line);
+  }
+  .modal-header h3{margin:0;color:var(--maroon);font-size:1rem;}
+  .modal-close{
+    background:none;border:none;font-size:1.5rem;color:#999;cursor:pointer;padding:0 4px;line-height:1;
+  }
+  .modal-body{
+    padding:16px;
+    overflow-y:auto;
+    flex:1;
+  }
+
+  .empty-state{
+    text-align:center;
+    color:#a3937a;
+    font-size:.85rem;
+    padding:30px 20px;
+  }
+  .empty-state .emoji{font-size:2rem;display:block;margin-bottom:8px;}
 </style>
 </head>
 <body>
@@ -261,7 +353,7 @@
 
       <h2>2. Scan the product's barcode</h2>
       <div id="reader"></div>
-      <p class="scan-hint">Point the camera at the actual barcode on the product packaging. You can scan multiple items before saving.</p>
+      <p class="scan-hint" id="scanStatus">📷 Starting camera...</p>
       <button class="btn ghost" id="manualBtn" style="margin-top:10px;">Or enter barcode manually</button>
     </div>
 
@@ -277,12 +369,42 @@
 
   <!-- DASHBOARD VIEW -->
   <section id="dashboard" class="view">
-    <div class="stat-grid" style="margin-bottom:14px;">
-      <div class="stat"><div class="num" id="statStock">0</div><div class="label">Total Stock Items</div></div>
-      <div class="stat"><div class="num" id="statProfit">₱0</div><div class="label">Total Profit (Today)</div></div>
-      <div class="stat"><div class="num" id="statSalesToday">0</div><div class="label">Sales Today</div></div>
-      <div class="stat"><div class="num" id="statLow">0</div><div class="label">Low Stock Items</div></div>
+    <div class="info-banner">
+      💡 <strong>Tip:</strong> Your products are already pre-loaded. Just scan a barcode to add stock or record a sale — no need to re-enter product names every time. Tap on any stat card below to see the details!
     </div>
+
+    <div class="stat-grid" style="margin-bottom:14px;">
+      <div class="stat" id="statStockCard">
+        <div class="num" id="statStock">0</div>
+        <div class="label">Total Stock Items</div>
+        <div class="tap-hint">👆 Tap to view</div>
+      </div>
+      <div class="stat" id="statProfitCard">
+        <div class="num" id="statProfit">₱0</div>
+        <div class="label">Total Profit (Today)</div>
+        <div class="tap-hint">👆 Tap to view</div>
+      </div>
+      <div class="stat" id="statSalesCard">
+        <div class="num" id="statSalesToday">0</div>
+        <div class="label">Sales Today</div>
+        <div class="tap-hint">👆 Tap to view</div>
+      </div>
+      <div class="stat" id="statLowCard">
+        <div class="num" id="statLow">0</div>
+        <div class="label">Low Stock Items</div>
+        <div class="tap-hint">👆 Tap to view</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <h2 style="margin:0;">📊 Today's Sales History</h2>
+        <button class="btn ghost small" id="resetSalesBtn" style="width:auto; padding:6px 12px; color:var(--red); border-color:var(--red);">Reset</button>
+      </div>
+      <p class="note" style="margin-bottom:10px;">The "Reset" button clears only sales history. Your products and their stock counts will stay.</p>
+      <div id="salesHistoryList"></div>
+    </div>
+
     <div class="card">
       <h2>🏆 Top Selling Products</h2>
       <div id="topList"><p class="empty">No sales recorded yet.</p></div>
@@ -313,6 +435,12 @@
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
         <h2 style="margin:0;">Store Inventory</h2>
         <button class="btn ghost small" id="clearInventoryBtn" style="width:auto; padding:6px 12px; color:var(--red); border-color:var(--red);">Clear All</button>
+      </div>
+      <div class="filter-row" id="filterRow">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="instock">In Stock</button>
+        <button class="filter-btn" data-filter="low">Low Stock</button>
+        <button class="filter-btn" data-filter="out">Out of Stock</button>
       </div>
       <div id="prodList"></div>
     </div>
@@ -361,6 +489,17 @@
 </main>
 
 <div id="toast"></div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Details</h3>
+      <button class="modal-close" id="modalClose">×</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
 
 <script>
 /* =========================================================
@@ -494,6 +633,20 @@ function toast(msg){
   t._h = setTimeout(()=>t.style.display='none', 2600);
 }
 
+/* ---------- Modal ---------- */
+function openModal(title, htmlContent){
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = htmlContent;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalOverlay').addEventListener('click', (e)=>{
+  if(e.target.id === 'modalOverlay') closeModal();
+});
+
 /* ---------- Navigation ---------- */
 document.querySelectorAll('.tab').forEach(btn=>{
   btn.addEventListener('click', ()=>{
@@ -518,13 +671,38 @@ function setMode(m){
   document.getElementById('modeSaleBtn').classList.toggle('selected', m==='sale');
 }
 
+/* ---------- Scanner Status Helper ---------- */
+let scanStatusTimer;
+let statusResetTimer;
+
+function setScanStatus(state, text){
+  const el = document.getElementById('scanStatus');
+  if(!el) return;
+  el.innerHTML = text;
+  if(state==='searching') el.style.color = '#8a7860';
+  else if(state==='found') el.style.color = '#3E7A47';
+  else if(state==='none') el.style.color = '#B23A3A';
+}
+
+function startNoBarcodeTimer(){
+  clearTimeout(scanStatusTimer);
+  scanStatusTimer = setTimeout(()=>{
+    setScanStatus('none', '⚠️ <strong>No visible barcode detected.</strong><br>Move the camera closer, adjust the lighting, or tap <strong>"Enter barcode manually"</strong> below.');
+  }, 6000);
+}
+
 /* ---------- Scanner ---------- */
 let html5QrCode;
 function startScanner(){
   html5QrCode = new Html5Qrcode("reader");
   const config = { 
-    fps: 10, 
-    qrbox: { width: 250, height: 150 },
+    fps: 15,
+    qrbox: { width: 300, height: 200 },
+    aspectRatio: 1.0,
+    disableFlip: true,
+    experimentalFeatures: {
+      useBarCodeDetectorIfSupported: true
+    },
     formatsToSupport: [
       Html5QrcodeSupportedFormats.EAN_13,
       Html5QrcodeSupportedFormats.EAN_8,
@@ -536,10 +714,24 @@ function startScanner(){
     ]
   };
   html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess)
-    .catch(()=>{ document.getElementById('reader').innerHTML =
-      '<p class="empty">Camera not available. Use "enter code manually" below.</p>'; });
+    .then(() => {
+      setScanStatus('searching', '🔍 <strong>Looking for a barcode...</strong><br>Point the camera at the product\'s barcode.');
+      startNoBarcodeTimer();
+    })
+    .catch((err)=>{ 
+      console.error(err);
+      document.getElementById('reader').innerHTML =
+      '<p class="empty">Camera not available or permission denied. Use "enter barcode manually" below.</p>'; 
+    });
 }
 function onScanSuccess(decodedText){
+  clearTimeout(scanStatusTimer);
+  clearTimeout(statusResetTimer);
+  setScanStatus('found', '✅ <strong>Barcode detected:</strong> ' + decodedText);
+  statusResetTimer = setTimeout(() => {
+    setScanStatus('searching', '🔍 <strong>Looking for a barcode...</strong><br>Point the camera at the product\'s barcode.');
+    startNoBarcodeTimer();
+  }, 3000);
   handleCode(decodedText);
 }
 document.getElementById('manualBtn').addEventListener('click', ()=>{
@@ -551,10 +743,8 @@ document.getElementById('manualBtn').addEventListener('click', ()=>{
 let cart = [];
 
 function handleCode(rawCode){
-  // Clean the scanned code (remove spaces, dashes, etc.)
   const code = rawCode.toString().replace(/[^0-9A-Za-z]/g, '');
 
-  // Store-switch QR
   if(code.startsWith(STORE_QR_PREFIX)){
     const storeCode = code.slice(STORE_QR_PREFIX.length);
     switchStore(storeCode);
@@ -635,12 +825,26 @@ function renderDashboard(){
   const totalStock = db.products.reduce((s,p)=>s+p.stock,0);
   const profitToday = todaysTx.filter(t=>t.type==='sale').reduce((s,t)=>s+t.profit,0);
   const salesToday = todaysTx.filter(t=>t.type==='sale').reduce((s,t)=>s+t.qty,0);
-  const lowStock = db.products.filter(p=>p.stock<=5).length;
+  const lowStock = db.products.filter(p=>p.stock > 0 && p.stock <= 5).length;
 
   document.getElementById('statStock').textContent = totalStock;
   document.getElementById('statProfit').textContent = '₱' + profitToday.toFixed(2);
   document.getElementById('statSalesToday').textContent = salesToday;
   document.getElementById('statLow').textContent = lowStock;
+
+  const salesHistory = document.getElementById('salesHistoryList');
+  const todaySales = todaysTx.filter(t=>t.type==='sale');
+  if(!todaySales.length){
+    salesHistory.innerHTML = '<p class="empty">No sales yet today. Scan items in Sale mode to see them here.</p>';
+  } else {
+    salesHistory.innerHTML = todaySales.map(t => {
+      const d = new Date(t.date);
+      return `<div class="prod-row">
+        <span><span class="name">${t.name}</span><br><span class="meta">${t.qty} pcs × ₱${(t.amount/t.qty).toFixed(2)} · ${d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span></span>
+        <span class="qty-badge">₱${t.amount.toFixed(2)}</span>
+      </div>`;
+    }).join('');
+  }
 
   const salesByProduct = {};
   db.transactions.filter(t=>t.type==='sale').forEach(t=>{
@@ -661,6 +865,91 @@ function renderDashboard(){
     return `<div class="prod-row"><span class="name">${txnBadge}${label} ${t.qty} × ${t.name}</span><span class="meta">${d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span></div>`;
   }).join('') : '<p class="empty">Nothing logged yet — scan a product to start.</p>';
 }
+
+/* ---------- Clickable Stat Cards ---------- */
+document.getElementById('statStockCard').addEventListener('click', () => {
+  const inStock = db.products.filter(p => p.stock > 0);
+  if(!inStock.length){
+    openModal('📦 Items In Stock', '<div class="empty-state"><span class="emoji">📭</span>No products have stock yet.<br>Scan a barcode to add stock.</div>');
+    return;
+  }
+  const html = inStock.map(p => `
+    <div class="prod-row">
+      <span><span class="name">${p.name}</span><br><span class="meta">${p.code}</span></span>
+      <span class="qty-badge ${p.stock<=5?'low':''}">${p.stock} in stock</span>
+    </div>`).join('');
+  openModal(`📦 Items In Stock (${inStock.length})`, html);
+});
+
+document.getElementById('statProfitCard').addEventListener('click', () => {
+  const today = new Date().toDateString();
+  const todaysSales = db.transactions.filter(t=> t.type==='sale' && new Date(t.date).toDateString()===today);
+  if(!todaysSales.length){
+    openModal('💰 Today\'s Profit', '<div class="empty-state"><span class="emoji">💰</span>No sales today yet.<br>Profit will appear here after your first sale.</div>');
+    return;
+  }
+  const totalProfit = todaysSales.reduce((s,t)=>s+t.profit,0);
+  const html = todaysSales.map(t => `
+    <div class="prod-row">
+      <span><span class="name">${t.name}</span><br><span class="meta">${t.qty} pcs · sold at ₱${(t.amount/t.qty).toFixed(2)}</span></span>
+      <span class="qty-badge">+₱${t.profit.toFixed(2)}</span>
+    </div>`).join('') + 
+    `<div class="prod-row" style="border-top:2px solid var(--maroon);margin-top:8px;padding-top:12px;">
+      <span class="name" style="font-size:1rem;">TOTAL PROFIT TODAY</span>
+      <span class="qty-badge" style="background:var(--gold);color:var(--maroon-dark);border-color:var(--gold);">₱${totalProfit.toFixed(2)}</span>
+    </div>`;
+  openModal('💰 Today\'s Profit Breakdown', html);
+});
+
+document.getElementById('statSalesCard').addEventListener('click', () => {
+  const today = new Date().toDateString();
+  const todaysSales = db.transactions.filter(t=> t.type==='sale' && new Date(t.date).toDateString()===today);
+  if(!todaysSales.length){
+    openModal('🛒 Today\'s Sales', '<div class="empty-state"><span class="emoji">🛒</span>No sales recorded today.<br>Scan items in Sale mode to start.</div>');
+    return;
+  }
+  const totalSales = todaysSales.reduce((s,t)=>s+t.qty,0);
+  const html = todaysSales.map(t => {
+    const d = new Date(t.date);
+    return `<div class="prod-row">
+      <span><span class="name">${t.name}</span><br><span class="meta">${d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})} · ${t.txnId || ''}</span></span>
+      <span class="qty-badge">${t.qty} pcs</span>
+    </div>`;
+  }).join('') + 
+  `<div class="prod-row" style="border-top:2px solid var(--maroon);margin-top:8px;padding-top:12px;">
+    <span class="name" style="font-size:1rem;">TOTAL ITEMS SOLD TODAY</span>
+    <span class="qty-badge" style="background:var(--gold);color:var(--maroon-dark);border-color:var(--gold);">${totalSales} pcs</span>
+  </div>`;
+  openModal('🛒 Today\'s Sales Details', html);
+});
+
+document.getElementById('statLowCard').addEventListener('click', () => {
+  const lowStock = db.products.filter(p => p.stock > 0 && p.stock <= 5);
+  if(!lowStock.length){
+    openModal('⚠️ Low Stock Items', '<div class="empty-state"><span class="emoji">✅</span>All good!<br>No items are low on stock right now.</div>');
+    return;
+  }
+  const html = lowStock.map(p => `
+    <div class="prod-row">
+      <span><span class="name">${p.name}</span><br><span class="meta">${p.code}</span></span>
+      <span class="qty-badge low">${p.stock} left ⚠️</span>
+    </div>`).join('');
+  openModal(`⚠️ Low Stock Items (${lowStock.length})`, html);
+});
+
+/* ---------- Reset Sales Button ---------- */
+document.getElementById('resetSalesBtn').addEventListener('click', () => {
+  if(db.transactions.length === 0){
+    toast('No sales history to reset.');
+    return;
+  }
+  if(confirm('Reset all sales history?\n\nThis will clear the dashboard stats (profit, sales count, top products).\n\n⚠️ Your PRODUCTS and their STOCK will NOT be affected.')) {
+    db.transactions = [];
+    saveDB(db);
+    renderDashboard();
+    toast('Sales history cleared. Products are safe!');
+  }
+});
 
 /* ---------- Products ---------- */
 document.getElementById('saveProdBtn').addEventListener('click', ()=>{
@@ -683,7 +972,6 @@ document.getElementById('saveProdBtn').addEventListener('click', ()=>{
   renderProducts();
 });
 
-// Clear All Inventory Button
 document.getElementById('clearInventoryBtn').addEventListener('click', () => {
   if(db.products.length === 0) {
     toast('Inventory is already empty.');
@@ -691,7 +979,7 @@ document.getElementById('clearInventoryBtn').addEventListener('click', () => {
   }
   if(confirm('Are you sure you want to clear ALL products from the inventory? This will also clear your sales history. This cannot be undone.')) {
     db.products = [];
-    db.transactions = []; // Clear sales history too for a fresh start
+    db.transactions = [];
     saveDB(db);
     renderProducts();
     renderDashboard();
@@ -700,15 +988,35 @@ document.getElementById('clearInventoryBtn').addEventListener('click', () => {
   }
 });
 
+let currentFilter = 'all';
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    renderProducts();
+  });
+});
+
 function renderProducts(){
   const list = document.getElementById('prodList');
   if(!db.products.length){ list.innerHTML = '<p class="empty">No products yet. Scan a barcode to add one.</p>'; return; }
   
-  list.innerHTML = db.products.map(p=>`
+  let filtered = db.products;
+  if(currentFilter === 'instock') filtered = db.products.filter(p => p.stock > 0);
+  else if(currentFilter === 'low') filtered = db.products.filter(p => p.stock > 0 && p.stock <= 5);
+  else if(currentFilter === 'out') filtered = db.products.filter(p => p.stock === 0);
+
+  if(!filtered.length){
+    list.innerHTML = `<p class="empty">No products match this filter.</p>`;
+    return;
+  }
+  
+  list.innerHTML = filtered.map(p=>`
     <div class="prod-row" style="flex-direction:column; align-items:flex-start; gap:8px;">
       <div style="display:flex; justify-content:space-between; width:100%; align-items:center;">
         <span><span class="name">${p.name}</span><br><span class="meta">${p.code} · ₱${p.price} retail</span></span>
-        <span class="qty-badge ${p.stock<=5?'low':''}">${p.stock} in stock</span>
+        <span class="qty-badge ${p.stock === 0 ? 'zero' : (p.stock<=5?'low':'')}">${p.stock} in stock</span>
       </div>
       <div class="btn-row" style="width:100%; gap:5px;">
         <button class="btn small minus-btn" data-code="${p.code}" style="flex:1; background:#B23A3A;">-</button>
@@ -718,7 +1026,6 @@ function renderProducts(){
       </div>
     </div>`).join('');
 
-  // Increment Stock
   list.querySelectorAll('.plus-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const code = e.target.dataset.code;
@@ -733,7 +1040,6 @@ function renderProducts(){
     });
   });
 
-  // Decrement Stock
   list.querySelectorAll('.minus-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const code = e.target.dataset.code;
@@ -750,7 +1056,6 @@ function renderProducts(){
     });
   });
 
-  // Edit Details
   list.querySelectorAll('.edit-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const code = e.target.dataset.code;
@@ -767,7 +1072,6 @@ function renderProducts(){
     });
   });
 
-  // Delete Individual Product
   list.querySelectorAll('.delete-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const code = e.target.dataset.code;
@@ -795,7 +1099,6 @@ document.getElementById('genQrBtn').addEventListener('click', ()=>{
   const code = document.getElementById('qrProductSelect').value;
   const out = document.getElementById('qrOutput');
   out.innerHTML = '';
-  // Generate barcode instead of QR
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   out.appendChild(svg);
   JsBarcode(svg, code, { format: "CODE128", width: 2, height: 60, displayValue: true });
@@ -833,8 +1136,58 @@ function renderStores(){
   list.querySelectorAll('.switchStoreBtn').forEach(btn=>{
     btn.addEventListener('click', ()=> switchStore(btn.dataset.code));
   });
+
   list.querySelectorAll('.printStoreBtn').forEach(btn=>{
-    btn.addEventListener('click', ()=> window.print());
+    btn.addEventListener('click', ()=> {
+      const code = btn.dataset.code;
+      const store = stores.find(s => s.code === code);
+      const qrContainer = document.getElementById('storeQr-' + code);
+      const canvas = qrContainer.querySelector('canvas');
+      const img = qrContainer.querySelector('img');
+      
+      let qrDataUrl = '';
+      if (canvas) {
+        qrDataUrl = canvas.toDataURL("image/png");
+      } else if (img) {
+        qrDataUrl = img.src;
+      }
+
+      if (!qrDataUrl) {
+        toast('QR code not ready. Please try again.');
+        return;
+      }
+
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Print Store QR - ${store.name}</title>
+            <style>
+              body { font-family: 'Segoe UI', sans-serif; text-align: center; padding: 40px; }
+              img { width: 300px; height: 300px; margin: 20px 0; }
+              h1 { color: #7A1E2B; font-size: 28px; margin-bottom: 5px; }
+              p { color: #666; font-size: 14px; margin: 5px 0; }
+              .code { font-weight: bold; font-family: monospace; background: #FBF6EC; padding: 8px 16px; border-radius: 6px; border: 1px solid #E6DAC2; display: inline-block; margin-top: 10px;}
+              @media print {
+                body { padding: 0; }
+                img { width: 250px; height: 250px; }
+              }
+            </style>
+          </head>
+          <body>
+            <h1>${store.name}</h1>
+            <p>Scan this QR code to switch to this store in the SariSmart app.</p>
+            <img src="${qrDataUrl}" alt="Store QR Code">
+            <br>
+            <p>Store Code: <span class="code">${store.code}</span></p>
+            <script>
+              window.onload = function() { window.print(); window.close(); }
+            </script>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+    });
   });
 }
 
@@ -906,4 +1259,4 @@ renderQrSelect();
 renderStores();
 </script>
 </body>
-  </html>
+</html>
