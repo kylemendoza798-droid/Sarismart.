@@ -342,7 +342,6 @@
 
 <main>
 
-  <!-- SCAN VIEW -->
   <section id="scan" class="view active">
     <div class="card">
       <h2>1. Choose entry type</h2>
@@ -367,7 +366,6 @@
     </div>
   </section>
 
-  <!-- DASHBOARD VIEW -->
   <section id="dashboard" class="view">
     <div class="info-banner">
       💡 <strong>Tip:</strong> Your products are already pre-loaded. Just scan a barcode to add stock or record a sale — no need to re-enter product names every time. Tap on any stat card below to see the details!
@@ -415,7 +413,6 @@
     </div>
   </section>
 
-  <!-- PRODUCTS VIEW -->
   <section id="products" class="view">
     <div class="card">
       <h2>Add / Edit Product</h2>
@@ -446,7 +443,6 @@
     </div>
   </section>
 
-  <!-- LABELS VIEW -->
   <section id="qr" class="view">
     <div class="card">
       <h2>Generate a Barcode Label</h2>
@@ -462,7 +458,6 @@
     </div>
   </section>
 
-  <!-- STORES VIEW -->
   <section id="stores" class="view">
     <div class="card">
       <h2>🏪 Stores</h2>
@@ -490,7 +485,6 @@
 
 <div id="toast"></div>
 
-<!-- MODAL -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <div class="modal-header">
@@ -532,7 +526,6 @@ let activeStoreCode = getActiveStoreCode();
 
 function dbKeyFor(code){ return 'sarismart_data_v1_' + code; }
 
-/* ---------- Storage helpers (per-store) ---------- */
 function loadDB(code){
   const raw = localStorage.getItem(dbKeyFor(code));
   if(raw) return JSON.parse(raw);
@@ -633,7 +626,6 @@ function toast(msg){
   t._h = setTimeout(()=>t.style.display='none', 2600);
 }
 
-/* ---------- Modal ---------- */
 function openModal(title, htmlContent){
   document.getElementById('modalTitle').textContent = title;
   document.getElementById('modalBody').innerHTML = htmlContent;
@@ -647,7 +639,6 @@ document.getElementById('modalOverlay').addEventListener('click', (e)=>{
   if(e.target.id === 'modalOverlay') closeModal();
 });
 
-/* ---------- Navigation ---------- */
 document.querySelectorAll('.tab').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
@@ -661,7 +652,6 @@ document.querySelectorAll('.tab').forEach(btn=>{
   });
 });
 
-/* ---------- Scan mode ---------- */
 let currentMode = 'stock';
 document.getElementById('modeStockBtn').addEventListener('click', ()=>setMode('stock'));
 document.getElementById('modeSaleBtn').addEventListener('click', ()=>setMode('sale'));
@@ -671,7 +661,6 @@ function setMode(m){
   document.getElementById('modeSaleBtn').classList.toggle('selected', m==='sale');
 }
 
-/* ---------- Scanner Status Helper ---------- */
 let scanStatusTimer;
 let statusResetTimer;
 
@@ -691,7 +680,6 @@ function startNoBarcodeTimer(){
   }, 6000);
 }
 
-/* ---------- Scanner ---------- */
 let html5QrCode;
 function startScanner(){
   html5QrCode = new Html5Qrcode("reader");
@@ -724,6 +712,7 @@ function startScanner(){
       '<p class="empty">Camera not available or permission denied. Use "enter barcode manually" below.</p>'; 
     });
 }
+
 function onScanSuccess(decodedText){
   clearTimeout(scanStatusTimer);
   clearTimeout(statusResetTimer);
@@ -734,12 +723,12 @@ function onScanSuccess(decodedText){
   }, 3000);
   handleCode(decodedText);
 }
+
 document.getElementById('manualBtn').addEventListener('click', ()=>{
   const code = prompt('Enter barcode:');
   if(code) handleCode(code.trim());
 });
 
-/* ---------- Multi-item cart ---------- */
 let cart = [];
 
 function handleCode(rawCode){
@@ -818,7 +807,6 @@ document.getElementById('saveCartBtn').addEventListener('click', ()=>{
   renderProducts();
 });
 
-/* ---------- Dashboard ---------- */
 function renderDashboard(){
   const today = new Date().toDateString();
   const todaysTx = db.transactions.filter(t=> new Date(t.date).toDateString()===today);
@@ -866,7 +854,6 @@ function renderDashboard(){
   }).join('') : '<p class="empty">Nothing logged yet — scan a product to start.</p>';
 }
 
-/* ---------- Clickable Stat Cards ---------- */
 document.getElementById('statStockCard').addEventListener('click', () => {
   const inStock = db.products.filter(p => p.stock > 0);
   if(!inStock.length){
@@ -937,7 +924,6 @@ document.getElementById('statLowCard').addEventListener('click', () => {
   openModal(`⚠️ Low Stock Items (${lowStock.length})`, html);
 });
 
-/* ---------- Reset Sales Button ---------- */
 document.getElementById('resetSalesBtn').addEventListener('click', () => {
   if(db.transactions.length === 0){
     toast('No sales history to reset.');
@@ -951,7 +937,6 @@ document.getElementById('resetSalesBtn').addEventListener('click', () => {
   }
 });
 
-/* ---------- Products ---------- */
 document.getElementById('saveProdBtn').addEventListener('click', ()=>{
   const code = document.getElementById('pCode').value.trim();
   const name = document.getElementById('pName').value.trim();
@@ -1090,7 +1075,6 @@ function renderProducts(){
   });
 }
 
-/* ---------- QR generator (products, in-app) ---------- */
 function renderQrSelect(){
   const sel = document.getElementById('qrProductSelect');
   sel.innerHTML = db.products.map(p=>`<option value="${p.code}">${p.name} (${p.code})</option>`).join('');
@@ -1107,7 +1091,6 @@ document.getElementById('genQrBtn').addEventListener('click', ()=>{
 });
 document.getElementById('printQrBtn').addEventListener('click', ()=> window.print());
 
-/* ---------- Stores ---------- */
 function renderStores(){
   document.getElementById('activeStoreLabel').textContent =
     (stores.find(s=>s.code===activeStoreCode) || {}).name || 'Main Store';
@@ -1202,7 +1185,6 @@ document.getElementById('addStoreBtn').addEventListener('click', ()=>{
   toast('Created store: ' + name);
 });
 
-/* ---------- Backup / Restore ---------- */
 document.getElementById('exportBtn').addEventListener('click', ()=>{
   const payload = { store: stores.find(s=>s.code===activeStoreCode), data: db };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
@@ -1244,14 +1226,12 @@ document.getElementById('importFile').addEventListener('change', (e)=>{
   e.target.value = '';
 });
 
-/* ---------- PWA install support ---------- */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('service-worker.js').catch(()=>{});
   });
 }
 
-/* ---------- Init ---------- */
 startScanner();
 renderDashboard();
 renderProducts();
