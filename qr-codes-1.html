@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SariSmart — Printable QR Labels</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<title>SariSmart — Printable Barcode Labels</title>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 <style>
   :root{ --maroon:#7A1E2B; --gold:#D9A441; --cream:#FBF6EC; }
   *{box-sizing:border-box;}
@@ -16,7 +16,7 @@
     color:#2B1E14;
   }
   .toolbar{
-    max-width:640px;
+    max-width:800px;
     margin:0 auto 20px;
     display:flex;
     justify-content:space-between;
@@ -33,27 +33,32 @@
     cursor:pointer;
   }
   .sheet{
-    max-width:640px;
+    max-width:800px;
     margin:0 auto;
     display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:14px;
+    grid-template-columns:repeat(3, 1fr);
+    gap:10px;
   }
   .label{
     background:#fff;
-    border:2px dashed var(--gold);
-    border-radius:10px;
-    padding:14px;
+    border:1px dashed var(--gold);
+    border-radius:6px;
+    padding:8px;
     text-align:center;
+    page-break-inside: avoid;
   }
-  .label .qr{display:flex;justify-content:center;margin-bottom:8px;}
-  .label .name{font-weight:700;font-size:.9rem;color:var(--maroon);}
-  .label .code{font-size:.7rem;color:#8a7860;margin-top:2px;}
-  .note{max-width:640px;margin:20px auto 0;font-size:.8rem;color:#6b5a44;text-align:center;}
+  .label svg {
+    max-width: 100%;
+    height: auto;
+  }
+  .label .name{font-weight:700;font-size:.75rem;color:var(--maroon);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .label .code{font-size:.65rem;color:#8a7860;}
+  .note{max-width:800px;margin:20px auto 0;font-size:.8rem;color:#6b5a44;text-align:center;}
   @media print{
     .toolbar{display:none;}
     body{padding:0;background:#fff;}
-    .label{border:1px solid #ccc;break-inside:avoid;}
+    .sheet{grid-template-columns:repeat(4, 1fr);gap:5px;}
+    .label{border:1px solid #eee;}
   }
 </style>
 </head>
@@ -62,33 +67,86 @@
 <div class="toolbar">
   <div style="display:flex;align-items:center;gap:10px;">
     <img src="logo.png" alt="SariSmart logo" style="height:36px;width:36px;object-fit:contain;">
-    <h1>SariSmart — QR Labels to Print</h1>
+    <h1>SariSmart — Printable Barcode Labels</h1>
   </div>
   <button onclick="window.print()">Print</button>
 </div>
 
 <div class="sheet" id="sheet"></div>
-<p class="note">Cut out each label and stick it on the matching product. Codes match the sample products already loaded in the SariSmart app — scan them straight away to test Inventory (Stock) and Sale (Benta) entries.</p>
+<p class="note">Cut out each label and stick it on the matching product. Scan them in the app to manage stock.</p>
 
 <script>
 const products = [
-  { code: 'SARISMART-P001', name: 'Nescafe 3in1' },
-  { code: 'SARISMART-P002', name: 'Kopiko Blanca' },
-  { code: 'SARISMART-P003', name: 'Lucky Me Pancit Canton' },
-  { code: 'SARISMART-P004', name: 'Coke 1L' },
-  { code: 'SARISMART-P005', name: 'Purefoods Corned Beef' }
+  { code: '4801668602034', name: 'Datu Puti Soy Sauce (200ml)' },
+  { code: '4800361410816', name: 'Bear Brand Fortified Powdered Milk Drink (33g)' },
+  { code: '7622300559991', name: 'Tang Orange Powdered Drink Mix (19g)' },
+  { code: '748485700038', name: '555 Tuna Caldereta (155g)' },
+  { code: '4800514221245', name: 'Fresh Eggs One Dozen (12 pcs)' },
+  { code: '4805358373037', name: 'Magnolia Cheezee (160g)' },
+  { code: '4800361413503', name: 'Nestlé Milo Activ-Go Chocolate Malt Powder (24g)' },
+  { code: '4800092660641', name: 'Rebisco Choco Mucho Milk Chocolate (30g)' },
+  { code: '4801668600641', name: 'Mang Tomas All-Around Sarsa (100g)' },
+  { code: '4800888289551', name: 'Surf Powder Detergent Purple Blooms (65g)' },
+  { code: '4800049720114', name: "Nature's Spring Purified Drinking Water (500ml)" },
+  { code: '4800888177124', name: 'Surf Powder Detergent Blossom Fresh (74g)' },
+  { code: '4800888209566', name: 'Cream Silk Triple Keratin Rescue Conditioner (10ml)' },
+  { code: '8717163616444', name: 'Dove Beauty Bar (135g)' },
+  { code: '4800888151704', name: 'Clear Men Anti-Dandruff Shampoo (12ml)' },
+  { code: '4800888139306', name: 'Cream Silk Conditioner (13ml)' },
+  { code: '8998666001702', name: 'Kopiko 3 in 1 Strong Coffee Mix (20g)' },
+  { code: '4800016021169', name: 'Great Taste Original Coffee Twin Pack (33g)' },
+  { code: '4800216110014', name: 'Clover chips cheese flavor (85g)' },
+  { code: '4800194104968', name: 'Oishi prawn crackers spicy flavor (24g)' },
+  { code: '4800194177962', name: 'Oishi prawn crackers spicy flavor (90g)' },
+  { code: '4800194177092', name: 'Kirei yummy flakes shrimp flavor (60g)' },
+  { code: '4800523220048', name: 'peewee sizzling bbq flavored snack (60g)' },
+  { code: '4800194101134', name: 'oishi cracklings salt and vinegar (50g)' },
+  { code: '4800024562692', name: 'Del Monte 100% pineapple juice with vitamins A-C-E (220ml)' },
+  { code: '4800024562616', name: 'Del Monte 100% pineapple juice fiber enriched (220ml)' },
+  { code: '4800024572981', name: 'Del Monte 100% pineapple juice heart smart (220ml)' },
+  { code: '4804888889728', name: 'Zest-O Big quick punch orange drink (250ml)' },
+  { code: '4804888900133', name: 'Zest-O Big quick punch mango drink (250ml)' },
+  { code: '4804888889766', name: 'Zest-O Big quick punch grape drink (250ml)' },
+  { code: '4801688124011', name: 'Regent Kobi french fried style potato flavor snack (40g)' },
+  { code: '4800194106030', name: 'Oishi potato fries tomato ketchup flavor (50g)' },
+  { code: '4800194177771', name: 'Oishi potato fries cheese flavor (90g)' },
+  { code: '4800016661099', name: "Jack 'n Jill Roller Coaster cheddar cheese flavored potato snack (85g)" },
+  { code: '4800194136648', name: 'Oishi Fishda fish kropeck (22g)' },
+  { code: '4800194152891', name: "Marty's Cracklin' vegetarian chicharon spicy vinegar flavor (26g)" },
+  { code: '4800016110542', name: "Jack 'n Jill Mang Juan chicharron espesyal suka't sili (26g)" },
+  { code: '4800016110535', name: "Jack 'n Jill Mang Juan chicharron sukang paombong (26g)" },
+  { code: '4800194118149', name: 'Oishi Miggos thin traditional style tortilla chips nacho cheese flavor (105g)' },
+  { code: '4800016663802', name: "Jack 'n Jill Nova multigrain snacks country cheddar flavor (40g)" },
+  { code: '4800016663505', name: "Jack 'n Jill Nova multigrain snacks country cheddar flavor (78g)" },
+  { code: '4807770270017', name: 'Lucky Me! Pancit Canton Original (80g)' },
+  { code: '4807770270055', name: 'Lucky Me! Pancit Canton Kalamansi (80g)' },
+  { code: '4800361295246', name: 'Nescafé Original 3-in-1 (28g)' },
+  { code: '4800016022265', name: 'Great Taste White Twin Pack (50g)' },
+  { code: '748485100081', name: 'Century Tuna Flakes in Oil (180g)' },
+  { code: '748485800035', name: 'Argentina corned beef (260g)' },
+  { code: '4800344001628', name: 'Silver Swan Soy Sauce (1000ml)' },
+  { code: '737964000127', name: 'Datu Puti Vinegar (2L)' },
+  { code: '4800611546760', name: 'Cobra Energy Drink (350ml)' },
+  { code: '750515018402', name: 'SkyFlakes Crackers (25g)' },
+  { code: '4902430327428', name: 'Safeguard Bar Arctic Fresh (55g)' }
 ];
 
 const sheet = document.getElementById('sheet');
 products.forEach(p=>{
   const label = document.createElement('div');
   label.className = 'label';
-  label.innerHTML = `<div class="qr" id="qr-${p.code}"></div>
+  label.innerHTML = `<svg id="barcode-${p.code}"></svg>
     <div class="name">${p.name}</div>
     <div class="code">${p.code}</div>`;
   sheet.appendChild(label);
-  new QRCode(document.getElementById('qr-'+p.code), {
-    text: p.code, width: 130, height: 130, colorDark:'#7A1E2B', colorLight:'#ffffff'
+  
+  // Generate Barcode
+  JsBarcode(`#barcode-${p.code}`, p.code, {
+    format: "CODE128",
+    width: 1.5,
+    height: 40,
+    displayValue: false,
+    margin: 0
   });
 });
 </script>
