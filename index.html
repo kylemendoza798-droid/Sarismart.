@@ -261,7 +261,7 @@
 
       <h2>2. Scan the product's barcode</h2>
       <div id="reader"></div>
-      <p class="scan-hint">Point the camera at the barcode. You can scan multiple items before saving.</p>
+      <p class="scan-hint">Point the camera at the actual barcode on the product packaging. You can scan multiple items before saving.</p>
       <button class="btn ghost" id="manualBtn" style="margin-top:10px;">Or enter barcode manually</button>
     </div>
 
@@ -310,7 +310,10 @@
       <button class="btn" id="saveProdBtn">Save Product</button>
     </div>
     <div class="card">
-      <h2>Store Inventory</h2>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <h2 style="margin:0;">Store Inventory</h2>
+        <button class="btn ghost small" id="clearInventoryBtn" style="width:auto; padding:6px 12px; color:var(--red); border-color:var(--red);">Clear All</button>
+      </div>
       <div id="prodList"></div>
     </div>
   </section>
@@ -678,9 +681,26 @@ document.getElementById('saveProdBtn').addEventListener('click', ()=>{
   renderProducts();
 });
 
+// Clear All Inventory Button
+document.getElementById('clearInventoryBtn').addEventListener('click', () => {
+  if(db.products.length === 0) {
+    toast('Inventory is already empty.');
+    return;
+  }
+  if(confirm('Are you sure you want to clear ALL products from the inventory? This will also clear your sales history. This cannot be undone.')) {
+    db.products = [];
+    db.transactions = []; // Clear sales history too for a fresh start
+    saveDB(db);
+    renderProducts();
+    renderDashboard();
+    renderQrSelect();
+    toast('Inventory cleared completely.');
+  }
+});
+
 function renderProducts(){
   const list = document.getElementById('prodList');
-  if(!db.products.length){ list.innerHTML = '<p class="empty">No products yet.</p>'; return; }
+  if(!db.products.length){ list.innerHTML = '<p class="empty">No products yet. Scan a barcode to add one.</p>'; return; }
   
   list.innerHTML = db.products.map(p=>`
     <div class="prod-row" style="flex-direction:column; align-items:flex-start; gap:8px;">
@@ -691,7 +711,8 @@ function renderProducts(){
       <div class="btn-row" style="width:100%; gap:5px;">
         <button class="btn small minus-btn" data-code="${p.code}" style="flex:1; background:#B23A3A;">-</button>
         <button class="btn small plus-btn" data-code="${p.code}" style="flex:1; background:#3E7A47;">+</button>
-        <button class="btn ghost small edit-btn" data-code="${p.code}" style="flex:2;">Edit Details</button>
+        <button class="btn ghost small edit-btn" data-code="${p.code}" style="flex:2;">Edit</button>
+        <button class="btn small delete-btn" data-code="${p.code}" style="flex:1; background:#333;">🗑️</button>
       </div>
     </div>`).join('');
 
@@ -740,6 +761,24 @@ function renderProducts(){
         saveDB(db);
         renderProducts();
         toast('Product details updated');
+      }
+    });
+  });
+
+  // Delete Individual Product
+  list.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const code = e.target.dataset.code;
+      const product = db.products.find(p => p.code === code);
+      if(product) {
+        if(confirm(`Are you sure you want to remove "${product.name}" from your inventory?`)) {
+          db.products = db.products.filter(p => p.code !== code);
+          saveDB(db);
+          renderProducts();
+          renderDashboard();
+          renderQrSelect();
+          toast(`${product.name} has been removed.`);
+        }
       }
     });
   });
