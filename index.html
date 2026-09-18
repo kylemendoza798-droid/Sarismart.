@@ -29,20 +29,12 @@
   }
   *{box-sizing:border-box;}
   body{
-    margin:0;
-    font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
-    background:var(--cream);
-    color:var(--ink);
-    padding-bottom:80px;
+    margin:0;font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+    background:var(--cream);color:var(--ink);padding-bottom:80px;
   }
   header{
-    background:var(--maroon);
-    color:var(--gold-light);
-    padding:14px 20px 12px;
-    position:sticky;
-    top:0;
-    z-index:20;
-    box-shadow:0 2px 8px rgba(0,0,0,.15);
+    background:var(--maroon);color:var(--gold-light);padding:14px 20px 12px;
+    position:sticky;top:0;z-index:20;box-shadow:0 2px 8px rgba(0,0,0,.15);
   }
   header h1{margin:0;font-size:1.4rem;letter-spacing:.5px;}
   header h1 span{color:var(--gold);}
@@ -79,6 +71,30 @@
   .mode-btn.selected.sale{border-color:var(--gold);background:var(--gold);color:var(--maroon-dark);}
   #reader{width:100%;border-radius:8px;overflow:hidden;}
   .scan-hint{text-align:center;font-size:.8rem;color:#8a7860;margin-top:8px;line-height:1.5;transition:color 0.2s;}
+  
+  /* ===== CAMERA AREA (idle state) ===== */
+  .camera-idle{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:36px 16px;background:linear-gradient(135deg, #FFF9E6, #FBF6EC);
+    border:2px dashed var(--gold);border-radius:10px;text-align:center;
+  }
+  .camera-idle .cam-icon{
+    width:64px;height:64px;border-radius:50%;background:var(--maroon);
+    color:var(--gold-light);display:flex;align-items:center;justify-content:center;
+    font-size:1.8rem;margin-bottom:12px;
+  }
+  .camera-idle .cam-text{
+    font-size:.85rem;color:#6b5a44;margin-bottom:14px;line-height:1.5;max-width:280px;
+  }
+  .camera-idle .start-btn{
+    background:linear-gradient(135deg, var(--maroon), var(--maroon-dark));
+    color:#fff;border:none;border-radius:10px;padding:14px 28px;
+    font-size:.95rem;font-weight:800;cursor:pointer;display:inline-flex;
+    align-items:center;gap:8px;box-shadow:0 4px 12px rgba(122,30,43,.25);
+    transition:transform 0.1s;
+  }
+  .camera-idle .start-btn:active{transform:scale(0.97);}
+  
   input, select{
     width:100%;padding:10px;border:1px solid var(--line);border-radius:6px;
     font-size:.95rem;margin-bottom:10px;background:#fffdf8;
@@ -196,7 +212,6 @@
     font-size:1rem;margin-bottom:0;background:#fffdf8;transition:border-color 0.15s;
   }
   .form-group input:focus{outline:none;border-color:var(--gold);background:#fff;}
-  .form-group input[readonly]{background:#F5EDE0;color:#6b5a44;cursor:not-allowed;}
   .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
   .qty-stepper{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:16px;}
   .qty-stepper button{
@@ -219,83 +234,34 @@
   .modal-actions{display:flex;gap:10px;margin-top:8px;}
   .modal-actions .btn{flex:1;padding:14px;}
   .modal-actions .btn.ghost{background:#F5EDE0;border:none;font-weight:700;}
-
-  /* ====== SALES REPORT STYLES ====== */
-  .report-tabs{
-    display:flex;gap:6px;margin-bottom:14px;background:var(--cream);
-    border-radius:10px;padding:4px;
-  }
+  .report-tabs{display:flex;gap:6px;margin-bottom:14px;background:var(--cream);border-radius:10px;padding:4px;}
   .report-tab{
     flex:1;padding:10px 6px;border:none;background:none;border-radius:7px;
     font-size:.8rem;font-weight:700;color:#8a7860;cursor:pointer;transition:all 0.15s;
   }
   .report-tab.active{background:var(--maroon);color:#fff;box-shadow:0 2px 6px rgba(122,30,43,.25);}
-
-  .report-summary{
-    display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;
-  }
-  .report-summary .box{
-    background:var(--cream);border-radius:10px;padding:12px;text-align:center;
-    border:1px solid var(--line);
-  }
-  .report-summary .box .big-num{
-    font-size:1.3rem;font-weight:800;color:var(--maroon);line-height:1.2;
-  }
-  .report-summary .box .small-label{
-    font-size:.68rem;color:#8a7860;text-transform:uppercase;
-    letter-spacing:.4px;font-weight:600;margin-top:4px;
-  }
-
-  .day-group{
-    margin-bottom:12px;
-    border:1px solid var(--line);
-    border-radius:10px;
-    overflow:hidden;
-    background:#fff;
-  }
-  .day-header{
-    display:flex;justify-content:space-between;align-items:center;
-    background:var(--cream);padding:10px 14px;cursor:pointer;
-    border-bottom:1px solid var(--line);
-  }
-  .day-header .day-title{
-    font-weight:800;color:var(--maroon);font-size:.88rem;
-  }
-  .day-header .day-total{
-    font-weight:800;color:var(--green);font-size:.9rem;
-  }
-  .day-header .chev{
-    margin-left:8px;color:#8a7860;font-size:.8rem;transition:transform 0.2s;
-  }
+  .report-summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+  .report-summary .box{background:var(--cream);border-radius:10px;padding:12px;text-align:center;border:1px solid var(--line);}
+  .report-summary .box .big-num{font-size:1.3rem;font-weight:800;color:var(--maroon);line-height:1.2;}
+  .report-summary .box .small-label{font-size:.68rem;color:#8a7860;text-transform:uppercase;letter-spacing:.4px;font-weight:600;margin-top:4px;}
+  .day-group{margin-bottom:12px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;}
+  .day-header{display:flex;justify-content:space-between;align-items:center;background:var(--cream);padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--line);}
+  .day-header .day-title{font-weight:800;color:var(--maroon);font-size:.88rem;}
+  .day-header .day-total{font-weight:800;color:var(--green);font-size:.9rem;}
+  .day-header .chev{margin-left:8px;color:#8a7860;font-size:.8rem;transition:transform 0.2s;}
   .day-group.collapsed .day-body{display:none;}
   .day-group.collapsed .chev{transform:rotate(-90deg);}
   .day-body{padding:4px 14px 10px;}
-
-  .top-prod-item{
-    display:flex;align-items:center;gap:12px;
-    padding:10px 0;border-bottom:1px solid var(--line);
-  }
+  .top-prod-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);}
   .top-prod-item:last-child{border-bottom:none;}
-  .top-prod-item .rank{
-    width:32px;height:32px;border-radius:50%;
-    background:var(--gold);color:var(--maroon-dark);
-    display:flex;align-items:center;justify-content:center;
-    font-weight:800;font-size:.9rem;flex-shrink:0;
-  }
+  .top-prod-item .rank{width:32px;height:32px;border-radius:50%;background:var(--gold);color:var(--maroon-dark);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;flex-shrink:0;}
   .top-prod-item .rank.gold{background:#FFD700;color:#7A1E2B;}
   .top-prod-item .rank.silver{background:#C0C0C0;color:#333;}
   .top-prod-item .rank.bronze{background:#CD7F32;color:#fff;}
   .top-prod-item .info{flex:1;min-width:0;}
-  .top-prod-item .info .pname{
-    font-weight:700;font-size:.88rem;color:var(--ink);
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  }
-  .top-prod-item .info .pmeta{
-    font-size:.72rem;color:#8a7860;margin-top:2px;
-  }
-  .top-prod-item .rev{
-    font-weight:800;color:var(--maroon);font-size:.88rem;white-space:nowrap;
-  }
+  .top-prod-item .info .pname{font-weight:700;font-size:.88rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .top-prod-item .info .pmeta{font-size:.72rem;color:#8a7860;margin-top:2px;}
+  .top-prod-item .rev{font-weight:800;color:var(--maroon);font-size:.88rem;white-space:nowrap;}
 </style>
 </head>
 <body>
@@ -329,8 +295,25 @@
       </div>
 
       <h2>2. Scan the product's barcode</h2>
-      <div id="reader"></div>
-      <p class="scan-hint" id="scanStatus">📷 Starting camera...</p>
+      
+      <!-- CAMERA IDLE STATE -->
+      <div id="cameraIdle" class="camera-idle">
+        <div class="cam-icon">📷</div>
+        <div class="cam-text">
+          Tap the button below to open the camera and start scanning product barcodes.
+        </div>
+        <button class="start-btn" id="startScannerBtn">
+          <span>▶</span> Start Scanning
+        </button>
+      </div>
+
+      <!-- CAMERA ACTIVE STATE (hidden initially) -->
+      <div id="cameraActive" style="display:none;">
+        <div id="reader"></div>
+        <p class="scan-hint" id="scanStatus">📷 Starting camera...</p>
+        <button class="btn ghost" id="stopScannerBtn" style="margin-top:10px;color:var(--red);border-color:var(--red);">⏹ Stop Camera</button>
+      </div>
+
       <button class="btn ghost" id="manualBtn" style="margin-top:10px;">Or enter barcode manually</button>
     </div>
 
@@ -346,7 +329,7 @@
 
   <section id="dashboard" class="view">
     <div class="info-banner">
-      💡 <strong>Tip:</strong> Your products are already pre-loaded. Just scan a barcode to add stock or record a sale. Tap on any stat card below to see details. Open the <strong>Reports</strong> tab for daily/monthly sales tracking.
+      💡 <strong>Tip:</strong> Your products are already pre-loaded. Just scan a barcode to add stock or record a sale. Tap on any stat card below to see details.
     </div>
 
     <div class="stat-grid" style="margin-bottom:14px;">
@@ -391,7 +374,6 @@
     </div>
   </section>
 
-  <!-- REPORTS VIEW -->
   <section id="reports" class="view">
     <div class="card">
       <h2>📈 Sales Reports</h2>
@@ -648,7 +630,6 @@ function toast(msg){
   t._h = setTimeout(()=>t.style.display='none', 2600);
 }
 
-/* ---------- DETAILS MODAL ---------- */
 function openModal(title, htmlContent){
   document.getElementById('modalTitle').textContent = title;
   document.getElementById('modalBody').innerHTML = htmlContent;
@@ -778,11 +759,7 @@ document.getElementById('prodModalSave').addEventListener('click', ()=>{
   const price = parseFloat(document.getElementById('pmPrice').value) || 0;
   const qty = parseInt(document.getElementById('pmQty').value) || 0;
 
-  if(!name){
-    toast('Please enter a product name.');
-    document.getElementById('pmName').focus();
-    return;
-  }
+  if(!name){ toast('Please enter a product name.'); document.getElementById('pmName').focus(); return; }
 
   if(prodModalMode === 'new-scan'){
     const code = pendingScannedCode;
@@ -840,6 +817,11 @@ document.querySelectorAll('.tab').forEach(btn=>{
     if(btn.dataset.view==='products') renderProducts();
     if(btn.dataset.view==='qr') renderQrSelect();
     if(btn.dataset.view==='stores') renderStores();
+    
+    // Stop camera kapag lumipat ng tab
+    if(btn.dataset.view !== 'scan'){
+      stopScanner();
+    }
   });
 });
 
@@ -852,8 +834,13 @@ function setMode(m){
   document.getElementById('modeSaleBtn').classList.toggle('selected', m==='sale');
 }
 
+/* =========================================================
+   SCANNER (with Start/Stop button)
+   ========================================================= */
 let scanStatusTimer;
 let statusResetTimer;
+let html5QrCode = null;
+let isScanning = false;
 
 function setScanStatus(state, text){
   const el = document.getElementById('scanStatus');
@@ -867,12 +854,18 @@ function setScanStatus(state, text){
 function startNoBarcodeTimer(){
   clearTimeout(scanStatusTimer);
   scanStatusTimer = setTimeout(()=>{
-    setScanStatus('none', '⚠️ <strong>No visible barcode detected.</strong><br>Move the camera closer or tap <strong>"Enter barcode manually"</strong> below.');
+    setScanStatus('none', '⚠️ <strong>No visible barcode detected.</strong><br>Move the camera closer or tap <strong>"Enter barcode manually"</strong>.');
   }, 6000);
 }
 
-let html5QrCode;
 function startScanner(){
+  if(isScanning) return;
+  
+  // Show camera active, hide idle
+  document.getElementById('cameraIdle').style.display = 'none';
+  document.getElementById('cameraActive').style.display = 'block';
+  setScanStatus('searching', '📷 <strong>Starting camera...</strong>');
+  
   html5QrCode = new Html5Qrcode("reader");
   const config = { 
     fps: 15,
@@ -892,6 +885,7 @@ function startScanner(){
   };
   html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess)
     .then(() => {
+      isScanning = true;
       setScanStatus('searching', '🔍 <strong>Looking for a barcode...</strong><br>Point the camera at the product\'s barcode.');
       startNoBarcodeTimer();
     })
@@ -901,6 +895,26 @@ function startScanner(){
       '<p class="empty">Camera not available or permission denied. Use "enter barcode manually" below.</p>'; 
     });
 }
+
+function stopScanner(){
+  if(!html5QrCode || !isScanning) {
+    // Reset UI kahit wala pang scanner
+    document.getElementById('cameraIdle').style.display = 'flex';
+    document.getElementById('cameraActive').style.display = 'none';
+    return;
+  }
+  html5QrCode.stop().then(() => {
+    isScanning = false;
+    document.getElementById('reader').innerHTML = '';
+    document.getElementById('cameraIdle').style.display = 'flex';
+    document.getElementById('cameraActive').style.display = 'none';
+    clearTimeout(scanStatusTimer);
+    clearTimeout(statusResetTimer);
+  }).catch((err)=>{ console.error(err); });
+}
+
+document.getElementById('startScannerBtn').addEventListener('click', startScanner);
+document.getElementById('stopScannerBtn').addEventListener('click', stopScanner);
 
 function onScanSuccess(decodedText){
   clearTimeout(scanStatusTimer);
@@ -984,9 +998,6 @@ document.getElementById('saveCartBtn').addEventListener('click', ()=>{
   renderProducts();
 });
 
-/* =========================================================
-   DASHBOARD
-   ========================================================= */
 function renderDashboard(){
   const today = new Date().toDateString();
   const todaysTx = db.transactions.filter(t=> new Date(t.date).toDateString()===today);
@@ -1034,7 +1045,6 @@ function renderDashboard(){
   }).join('') : '<p class="empty">Nothing logged yet — scan a product to start.</p>';
 }
 
-/* ---------- Stat Card Click Modals ---------- */
 document.getElementById('statStockCard').addEventListener('click', () => {
   const inStock = db.products.filter(p => p.stock > 0);
   if(!inStock.length){
@@ -1107,7 +1117,7 @@ document.getElementById('statLowCard').addEventListener('click', () => {
 
 document.getElementById('resetSalesBtn').addEventListener('click', () => {
   if(db.transactions.length === 0){ toast('No sales history to reset.'); return; }
-  if(confirm('Reset all sales history?\n\nThis will clear the dashboard stats AND the reports (daily, monthly, top products).\n\n⚠️ Your PRODUCTS and their STOCK will NOT be affected.')) {
+  if(confirm('Reset all sales history?\n\nThis will clear the dashboard stats AND the reports.\n\n⚠️ Your PRODUCTS and their STOCK will NOT be affected.')) {
     db.transactions = [];
     saveDB(db);
     renderDashboard();
@@ -1116,11 +1126,8 @@ document.getElementById('resetSalesBtn').addEventListener('click', () => {
   }
 });
 
-/* =========================================================
-   REPORTS (Daily / Monthly / Top Products)
-   ========================================================= */
+/* ---------- REPORTS ---------- */
 let currentReport = 'daily';
-
 document.querySelectorAll('.report-tab').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.report-tab').forEach(b => b.classList.remove('active'));
@@ -1131,24 +1138,16 @@ document.querySelectorAll('.report-tab').forEach(btn => {
 });
 
 function formatDateKey(d){
-  const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2,'0');
-  const dd = String(d.getDate()).padStart(2,'0');
-  return `${y}-${m}-${dd}`;
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 }
-
 function formatMonthKey(d){
-  const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2,'0');
-  return `${y}-${m}`;
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
 }
-
 function formatReadableDate(dateKey){
   const [y,m,d] = dateKey.split('-');
   const date = new Date(parseInt(y), parseInt(m)-1, parseInt(d));
   return date.toLocaleDateString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
 }
-
 function formatReadableMonth(monthKey){
   const [y,m] = monthKey.split('-');
   const date = new Date(parseInt(y), parseInt(m)-1, 1);
@@ -1164,7 +1163,6 @@ function renderReports(){
       content.innerHTML = '<div class="empty-state"><span class="emoji">📅</span>No sales yet.<br>Start scanning items in Sale mode to see your daily report.</div>';
       return;
     }
-    // Group by day
     const groups = {};
     salesTx.forEach(t => {
       const key = formatDateKey(new Date(t.date));
@@ -1174,11 +1172,9 @@ function renderReports(){
       groups[key].qty += t.qty;
       groups[key].profit += t.profit;
     });
-
     const sortedDays = Object.keys(groups).sort((a,b) => b.localeCompare(a));
     const today = formatDateKey(new Date());
 
-    // Summary
     const totalRevenue = salesTx.reduce((s,t)=>s+t.amount,0);
     const totalProfit = salesTx.reduce((s,t)=>s+t.profit,0);
     const totalItems = salesTx.reduce((s,t)=>s+t.qty,0);
@@ -1191,7 +1187,6 @@ function renderReports(){
         <div class="box"><div class="big-num">${sortedDays.length}</div><div class="small-label">Active Days</div></div>
       </div>
     `;
-
     sortedDays.forEach((dayKey, idx) => {
       const g = groups[dayKey];
       const isToday = dayKey === today;
@@ -1222,20 +1217,14 @@ function renderReports(){
         </div>
       `;
     });
-
     content.innerHTML = html;
-
-    // Collapse/expand toggles
     content.querySelectorAll('.day-header').forEach(h => {
-      h.addEventListener('click', () => {
-        h.parentElement.classList.toggle('collapsed');
-      });
+      h.addEventListener('click', () => h.parentElement.classList.toggle('collapsed'));
     });
   }
-
   else if(currentReport === 'monthly'){
     if(!salesTx.length){
-      content.innerHTML = '<div class="empty-state"><span class="emoji">📆</span>No sales yet.<br>Start scanning items in Sale mode to see your monthly report.</div>';
+      content.innerHTML = '<div class="empty-state"><span class="emoji">📆</span>No sales yet.<br>Start scanning items in Sale mode.</div>';
       return;
     }
     const groups = {};
@@ -1247,7 +1236,6 @@ function renderReports(){
       groups[key].qty += t.qty;
       groups[key].profit += t.profit;
     });
-
     const sortedMonths = Object.keys(groups).sort((a,b) => b.localeCompare(a));
     const thisMonth = formatMonthKey(new Date());
 
@@ -1263,14 +1251,12 @@ function renderReports(){
         <div class="box"><div class="big-num">${sortedMonths.length}</div><div class="small-label">Active Months</div></div>
       </div>
     `;
-
     sortedMonths.forEach((monthKey, idx) => {
       const g = groups[monthKey];
       const isCurrent = monthKey === thisMonth;
       const collapsed = idx > 2 && !isCurrent ? 'collapsed' : '';
       const monthLabel = isCurrent ? '📆 THIS MONTH — ' + formatReadableMonth(monthKey) : formatReadableMonth(monthKey);
 
-      // Group by day inside the month
       const dayGroups = {};
       g.items.forEach(t => {
         const dKey = formatDateKey(new Date(t.date));
@@ -1314,23 +1300,17 @@ function renderReports(){
         </div>
       `;
     });
-
     content.innerHTML = html;
     content.querySelectorAll('.day-header').forEach(h => {
-      h.addEventListener('click', () => {
-        h.parentElement.classList.toggle('collapsed');
-      });
+      h.addEventListener('click', () => h.parentElement.classList.toggle('collapsed'));
     });
   }
-
   else if(currentReport === 'top'){
     if(!salesTx.length){
-      content.innerHTML = '<div class="empty-state"><span class="emoji">🏆</span>No sales yet.<br>Start scanning items in Sale mode to see your top products.</div>';
+      content.innerHTML = '<div class="empty-state"><span class="emoji">🏆</span>No sales yet.<br>Start scanning items in Sale mode.</div>';
       return;
     }
-
-    // Toggle: All-time / This Month / Today
-    const topFilterHtml = `
+    content.innerHTML = `
       <div class="report-tabs" style="margin-bottom:14px;">
         <button class="report-tab active" data-topfilter="all">All-Time</button>
         <button class="report-tab" data-topfilter="month">This Month</button>
@@ -1338,8 +1318,6 @@ function renderReports(){
       </div>
       <div id="topFilteredContent"></div>
     `;
-    content.innerHTML = topFilterHtml;
-
     function renderTopFiltered(filter){
       const today = formatDateKey(new Date());
       const thisMonth = formatMonthKey(new Date());
@@ -1348,12 +1326,9 @@ function renderReports(){
       else if(filter === 'month') filtered = salesTx.filter(t => formatMonthKey(new Date(t.date)) === thisMonth);
 
       if(!filtered.length){
-        document.getElementById('topFilteredContent').innerHTML =
-          '<div class="empty-state"><span class="emoji">📭</span>No sales for this period.</div>';
+        document.getElementById('topFilteredContent').innerHTML = '<div class="empty-state"><span class="emoji">📭</span>No sales for this period.</div>';
         return;
       }
-
-      // Aggregate by product
       const prods = {};
       filtered.forEach(t => {
         if(!prods[t.name]) prods[t.name] = { qty: 0, revenue: 0, profit: 0 };
@@ -1361,7 +1336,6 @@ function renderReports(){
         prods[t.name].revenue += t.amount;
         prods[t.name].profit += t.profit;
       });
-
       const sorted = Object.entries(prods).sort((a,b) => b[1].qty - a[1].qty);
 
       const totalRevenue = filtered.reduce((s,t)=>s+t.amount,0);
@@ -1377,13 +1351,11 @@ function renderReports(){
         </div>
         <div style="font-size:.78rem;font-weight:800;color:var(--maroon);text-transform:uppercase;letter-spacing:.4px;margin:12px 0 6px;">Top Selling Products</div>
       `;
-
       sorted.forEach(([name, data], i) => {
         let rankClass = '';
         if(i === 0) rankClass = 'gold';
         else if(i === 1) rankClass = 'silver';
         else if(i === 2) rankClass = 'bronze';
-
         html += `
           <div class="top-prod-item">
             <div class="rank ${rankClass}">${i+1}</div>
@@ -1395,10 +1367,8 @@ function renderReports(){
           </div>
         `;
       });
-
       document.getElementById('topFilteredContent').innerHTML = html;
     }
-
     renderTopFiltered('all');
     content.querySelectorAll('[data-topfilter]').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -1410,9 +1380,6 @@ function renderReports(){
   }
 }
 
-/* =========================================================
-   PRODUCTS
-   ========================================================= */
 document.getElementById('clearInventoryBtn').addEventListener('click', () => {
   if(db.products.length === 0){ toast('Inventory is already empty.'); return; }
   if(confirm('Are you sure you want to clear ALL products from the inventory? This will also clear your sales history.')) {
@@ -1440,7 +1407,6 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
 function renderProducts(){
   const list = document.getElementById('prodList');
   if(!db.products.length){ list.innerHTML = '<p class="empty">No products yet. Scan a barcode to add one.</p>'; return; }
-  
   let filtered = db.products;
   if(currentFilter === 'instock') filtered = db.products.filter(p => p.stock > 0);
   else if(currentFilter === 'low') filtered = db.products.filter(p => p.stock > 0 && p.stock <= 5);
@@ -1466,32 +1432,18 @@ function renderProducts(){
     btn.addEventListener('click', (e) => {
       const code = e.target.dataset.code;
       const product = db.products.find(p => p.code === code);
-      if(product) {
-        product.stock += 1;
-        saveDB(db);
-        renderProducts();
-        renderDashboard();
-        toast(`Added 1 stock to ${product.name}`);
-      }
+      if(product) { product.stock += 1; saveDB(db); renderProducts(); renderDashboard(); toast(`Added 1 stock to ${product.name}`); }
     });
   });
-
   list.querySelectorAll('.minus-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const code = e.target.dataset.code;
       const product = db.products.find(p => p.code === code);
       if(product && product.stock > 0) {
-        product.stock -= 1;
-        saveDB(db);
-        renderProducts();
-        renderDashboard();
-        toast(`Removed 1 stock from ${product.name}`);
-      } else {
-        toast('Stock cannot go below 0');
-      }
+        product.stock -= 1; saveDB(db); renderProducts(); renderDashboard(); toast(`Removed 1 stock from ${product.name}`);
+      } else { toast('Stock cannot go below 0'); }
     });
   });
-
   list.querySelectorAll('.edit-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const code = e.target.dataset.code;
@@ -1499,7 +1451,6 @@ function renderProducts(){
       if(product) openProductModal('edit', { product });
     });
   });
-
   list.querySelectorAll('.delete-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const code = e.target.dataset.code;
@@ -1507,10 +1458,7 @@ function renderProducts(){
       if(product) {
         if(confirm(`Are you sure you want to remove "${product.name}" from your inventory?`)) {
           db.products = db.products.filter(p => p.code !== code);
-          saveDB(db);
-          renderProducts();
-          renderDashboard();
-          renderQrSelect();
+          saveDB(db); renderProducts(); renderDashboard(); renderQrSelect();
           toast(`${product.name} has been removed.`);
         }
       }
@@ -1562,7 +1510,6 @@ function renderStores(){
   list.querySelectorAll('.switchStoreBtn').forEach(btn=>{
     btn.addEventListener('click', ()=> switchStore(btn.dataset.code));
   });
-
   list.querySelectorAll('.printStoreBtn').forEach(btn=>{
     btn.addEventListener('click', ()=> {
       const code = btn.dataset.code;
@@ -1573,30 +1520,18 @@ function renderStores(){
       let qrDataUrl = '';
       if (canvas) qrDataUrl = canvas.toDataURL("image/png");
       else if (img) qrDataUrl = img.src;
-      if (!qrDataUrl) { toast('QR code not ready. Please try again.'); return; }
-
+      if (!qrDataUrl) { toast('QR code not ready.'); return; }
       const printWindow = window.open('', '_blank');
       printWindow.document.write(`
-        <html>
-          <head>
-            <title>Print Store QR - ${store.name}</title>
-            <style>
-              body { font-family: 'Segoe UI', sans-serif; text-align: center; padding: 40px; }
-              img { width: 300px; height: 300px; margin: 20px 0; }
-              h1 { color: #7A1E2B; font-size: 28px; margin-bottom: 5px; }
-              p { color: #666; font-size: 14px; margin: 5px 0; }
-              .code { font-weight: bold; font-family: monospace; background: #FBF6EC; padding: 8px 16px; border-radius: 6px; border: 1px solid #E6DAC2; display: inline-block; margin-top: 10px;}
-            </style>
-          </head>
-          <body>
-            <h1>${store.name}</h1>
-            <p>Scan this QR code to switch to this store in the SariSmart app.</p>
-            <img src="${qrDataUrl}" alt="Store QR Code">
-            <br>
-            <p>Store Code: <span class="code">${store.code}</span></p>
-            <script>window.onload = function() { window.print(); window.close(); }<\/script>
-          </body>
-        </html>
+        <html><head><title>Print Store QR - ${store.name}</title>
+        <style>body{font-family:'Segoe UI',sans-serif;text-align:center;padding:40px;}img{width:300px;height:300px;margin:20px 0;}h1{color:#7A1E2B;font-size:28px;margin-bottom:5px;}p{color:#666;font-size:14px;margin:5px 0;}.code{font-weight:bold;font-family:monospace;background:#FBF6EC;padding:8px 16px;border-radius:6px;border:1px solid #E6DAC2;display:inline-block;margin-top:10px;}</style>
+        </head><body>
+        <h1>${store.name}</h1>
+        <p>Scan this QR code to switch to this store in the SariSmart app.</p>
+        <img src="${qrDataUrl}" alt="Store QR Code"><br>
+        <p>Store Code: <span class="code">${store.code}</span></p>
+        <script>window.onload=function(){window.print();window.close();}<\/script>
+        </body></html>
       `);
       printWindow.document.close();
     });
@@ -1622,9 +1557,7 @@ document.getElementById('exportBtn').addEventListener('click', ()=>{
   const dateStr = new Date().toISOString().slice(0,10);
   a.href = url;
   a.download = `sarismart-backup-${activeStoreCode}-${dateStr}.json`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
   URL.revokeObjectURL(url);
   toast('Exported backup file');
 });
@@ -1643,14 +1576,9 @@ document.getElementById('importFile').addEventListener('change', (e)=>{
       if(!incoming.products || !incoming.transactions) throw new Error('bad format');
       db = incoming;
       saveDB(db);
-      renderDashboard();
-      renderReports();
-      renderProducts();
-      renderQrSelect();
+      renderDashboard(); renderReports(); renderProducts(); renderQrSelect();
       toast('Imported data');
-    }catch(err){
-      toast('Could not read file — make sure it is a valid backup file');
-    }
+    }catch(err){ toast('Could not read file'); }
   };
   reader.readAsText(file);
   e.target.value = '';
@@ -1663,7 +1591,6 @@ if ('serviceWorker' in navigator) {
 }
 
 /* ---------- Init ---------- */
-startScanner();
 renderDashboard();
 renderReports();
 renderProducts();
