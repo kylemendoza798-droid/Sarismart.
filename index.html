@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,445 +44,258 @@
     z-index:20;
     box-shadow:0 2px 8px rgba(0,0,0,.15);
   }
-  header h1{
-    margin:0;
-    font-size:1.4rem;
-    letter-spacing:.5px;
-  }
+  header h1{margin:0;font-size:1.4rem;letter-spacing:.5px;}
   header h1 span{color:var(--gold);}
   header p{margin:2px 0 0;font-size:.78rem;opacity:.85;}
   .store-badge{
-    margin-top:6px;
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    background:rgba(0,0,0,.2);
-    border:1px solid rgba(255,255,255,.15);
-    border-radius:20px;
-    padding:3px 10px;
-    font-size:.72rem;
-    color:var(--gold-light);
+    margin-top:6px;display:inline-flex;align-items:center;gap:6px;
+    background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.15);
+    border-radius:20px;padding:3px 10px;font-size:.72rem;color:var(--gold-light);
   }
-
   nav{
-    display:flex;
-    background:var(--maroon-dark);
-    position:sticky;
-    top:78px;
-    z-index:19;
-    overflow-x:auto;
+    display:flex;background:var(--maroon-dark);
+    position:sticky;top:78px;z-index:19;overflow-x:auto;
   }
   nav button{
-    flex:1;
-    min-width:70px;
-    padding:11px 4px;
-    background:none;
-    border:none;
-    color:#e8d9c2;
-    font-size:.74rem;
-    font-weight:600;
-    cursor:pointer;
-    border-bottom:3px solid transparent;
-    white-space:nowrap;
+    flex:1;min-width:70px;padding:11px 4px;background:none;border:none;
+    color:#e8d9c2;font-size:.74rem;font-weight:600;cursor:pointer;
+    border-bottom:3px solid transparent;white-space:nowrap;
   }
-  nav button.active{
-    color:var(--gold-light);
-    border-bottom:3px solid var(--gold);
-  }
-
+  nav button.active{color:var(--gold-light);border-bottom:3px solid var(--gold);}
   main{padding:16px;max-width:520px;margin:0 auto;}
   .view{display:none;}
   .view.active{display:block;}
-
   .card{
-    background:#fff;
-    border:1px solid var(--line);
-    border-radius:10px;
-    padding:16px;
-    margin-bottom:14px;
+    background:#fff;border:1px solid var(--line);border-radius:10px;
+    padding:16px;margin-bottom:14px;
   }
   .card h2{margin:0 0 10px;font-size:1rem;color:var(--maroon);}
-
   .mode-toggle{display:flex;gap:10px;margin-bottom:14px;}
   .mode-btn{
-    flex:1;
-    padding:14px 8px;
-    border-radius:8px;
-    border:2px solid var(--line);
-    background:#fff;
-    font-weight:700;
-    font-size:.9rem;
-    cursor:pointer;
-    color:var(--ink);
+    flex:1;padding:14px 8px;border-radius:8px;border:2px solid var(--line);
+    background:#fff;font-weight:700;font-size:.9rem;cursor:pointer;color:var(--ink);
   }
   .mode-btn.selected.stock{border-color:var(--maroon);background:var(--maroon);color:#fff;}
   .mode-btn.selected.sale{border-color:var(--gold);background:var(--gold);color:var(--maroon-dark);}
-
   #reader{width:100%;border-radius:8px;overflow:hidden;}
   .scan-hint{text-align:center;font-size:.8rem;color:#8a7860;margin-top:8px;line-height:1.5;transition:color 0.2s;}
-
   input, select{
-    width:100%;
-    padding:10px;
-    border:1px solid var(--line);
-    border-radius:6px;
-    font-size:.95rem;
-    margin-bottom:10px;
-    background:#fffdf8;
+    width:100%;padding:10px;border:1px solid var(--line);border-radius:6px;
+    font-size:.95rem;margin-bottom:10px;background:#fffdf8;
   }
   label{font-size:.78rem;font-weight:600;color:#6b5a44;display:block;margin-bottom:4px;}
   .btn{
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:8px;
-    background:var(--maroon);
-    color:#fff;
-    font-weight:700;
-    font-size:.95rem;
-    cursor:pointer;
+    width:100%;padding:12px;border:none;border-radius:8px;
+    background:var(--maroon);color:#fff;font-weight:700;font-size:.95rem;cursor:pointer;
   }
   .btn.gold{background:var(--gold);color:var(--maroon-dark);}
   .btn.ghost{background:none;border:1px solid var(--line);color:var(--ink);}
   .btn.small{padding:8px;font-size:.8rem;}
   .btn-row{display:flex;gap:8px;}
   .btn-row .btn{flex:1;}
-
-  /* Add Product big button */
-  .add-prod-btn{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:10px;
-    width:100%;
-    padding:16px;
-    background:linear-gradient(135deg, var(--maroon), var(--maroon-dark));
-    color:#fff;
-    border:none;
-    border-radius:12px;
-    font-weight:700;
-    font-size:1rem;
-    cursor:pointer;
-    margin-bottom:14px;
-    box-shadow:0 4px 12px rgba(122,30,43,.25);
-    transition:transform 0.1s;
-  }
-  .add-prod-btn:active{transform:scale(0.98);}
-  .add-prod-btn .plus-icon{
-    background:var(--gold);
-    color:var(--maroon-dark);
-    width:28px;
-    height:28px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:1.2rem;
-    font-weight:900;
-    line-height:1;
-  }
-
   .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
   .stat{
-    background:#fff;
-    border:1px solid var(--line);
-    border-left:4px solid var(--gold);
-    border-radius:8px;
-    padding:12px;
-    cursor:pointer;
-    transition:transform 0.1s, box-shadow 0.1s;
-    position:relative;
+    background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);
+    border-radius:8px;padding:12px;cursor:pointer;
+    transition:transform 0.1s, box-shadow 0.1s;position:relative;
   }
   .stat:hover{transform:translateY(-2px);box-shadow:0 3px 8px rgba(0,0,0,.08);}
   .stat:active{transform:translateY(0);}
   .stat .num{font-size:1.4rem;font-weight:800;color:var(--maroon);}
   .stat .label{font-size:.72rem;color:#8a7860;text-transform:uppercase;letter-spacing:.4px;}
   .stat .tap-hint{font-size:.65rem;color:var(--gold);margin-top:4px;font-weight:600;}
-
   .prod-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:10px 0;
-    border-bottom:1px solid var(--line);
-    font-size:.88rem;
-    gap:10px;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:10px 0;border-bottom:1px solid var(--line);font-size:.88rem;gap:10px;
   }
   .prod-row:last-child{border-bottom:none;}
   .prod-row .name{font-weight:600;}
   .prod-row .meta{font-size:.75rem;color:#8a7860;}
   .qty-badge{
-    background:var(--cream);
-    border:1px solid var(--line);
-    border-radius:20px;
-    padding:2px 10px;
-    font-size:.75rem;
-    font-weight:700;
-    color:var(--maroon);
-    white-space:nowrap;
+    background:var(--cream);border:1px solid var(--line);border-radius:20px;
+    padding:2px 10px;font-size:.75rem;font-weight:700;color:var(--maroon);white-space:nowrap;
   }
   .qty-badge.low{background:#FBE7E7;color:var(--red);border-color:#f0c6c6;}
   .qty-badge.zero{background:#EEE;color:#999;border-color:#DDD;}
   .txn-tag{
-    display:inline-block;
-    font-size:.68rem;
-    font-weight:700;
-    color:var(--maroon);
-    background:var(--gold-light);
-    border-radius:6px;
-    padding:1px 6px;
-    margin-right:6px;
+    display:inline-block;font-size:.68rem;font-weight:700;
+    color:var(--maroon);background:var(--gold-light);border-radius:6px;
+    padding:1px 6px;margin-right:6px;
   }
-
   .qr-box{background:#fff;padding:12px;border-radius:8px;display:flex;justify-content:center;margin-top:10px;}
-
   .cart-item{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:8px 10px;
-    background:var(--cream);
-    border:1px solid var(--line);
-    border-radius:8px;
-    margin-bottom:6px;
-    font-size:.85rem;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:8px 10px;background:var(--cream);border:1px solid var(--line);
+    border-radius:8px;margin-bottom:6px;font-size:.85rem;
   }
-  .cart-item button{
-    background:none;border:none;color:var(--red);font-weight:700;font-size:1rem;cursor:pointer;padding:0 4px;
-  }
-
+  .cart-item button{background:none;border:none;color:var(--red);font-weight:700;font-size:1rem;cursor:pointer;padding:0 4px;}
   #toast{
-    position:fixed;
-    bottom:16px;
-    left:50%;
-    transform:translateX(-50%);
-    background:var(--maroon);
-    color:#fff;
-    padding:10px 18px;
-    border-radius:24px;
-    font-size:.85rem;
-    display:none;
-    z-index:50;
-    box-shadow:0 4px 12px rgba(0,0,0,.2);
-    max-width:90%;
-    text-align:center;
+    position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
+    background:var(--maroon);color:#fff;padding:10px 18px;border-radius:24px;
+    font-size:.85rem;display:none;z-index:50;box-shadow:0 4px 12px rgba(0,0,0,.2);
+    max-width:90%;text-align:center;
   }
   .empty{text-align:center;color:#a3937a;font-size:.85rem;padding:20px 0;}
   .note{font-size:.8rem;color:#6b5a44;line-height:1.5;}
-
   .info-banner{
-    background:#FFF9E6;
-    border:1px solid var(--gold);
-    border-left:4px solid var(--gold);
-    border-radius:8px;
-    padding:10px 12px;
-    margin-bottom:14px;
-    font-size:.78rem;
-    color:#6b5a44;
-    line-height:1.5;
+    background:#FFF9E6;border:1px solid var(--gold);border-left:4px solid var(--gold);
+    border-radius:8px;padding:10px 12px;margin-bottom:14px;
+    font-size:.78rem;color:#6b5a44;line-height:1.5;
   }
   .info-banner strong{color:var(--maroon);}
-
-  .filter-row{
-    display:flex;
-    gap:6px;
-    margin-bottom:12px;
-    overflow-x:auto;
-    padding-bottom:4px;
-  }
+  .filter-row{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px;}
   .filter-btn{
-    padding:6px 12px;
-    border-radius:20px;
-    border:1px solid var(--line);
-    background:#fff;
-    font-size:.75rem;
-    font-weight:600;
-    color:#6b5a44;
-    cursor:pointer;
-    white-space:nowrap;
+    padding:6px 12px;border-radius:20px;border:1px solid var(--line);
+    background:#fff;font-size:.75rem;font-weight:600;color:#6b5a44;cursor:pointer;white-space:nowrap;
   }
-  .filter-btn.active{
-    background:var(--maroon);
-    color:#fff;
-    border-color:var(--maroon);
-  }
-
+  .filter-btn.active{background:var(--maroon);color:#fff;border-color:var(--maroon);}
   .modal-overlay{
-    display:none;
-    position:fixed;
-    top:0; left:0; right:0; bottom:0;
-    background:rgba(0,0,0,.6);
-    z-index:100;
-    padding:16px;
-    align-items:center;
-    justify-content:center;
+    display:none;position:fixed;top:0;left:0;right:0;bottom:0;
+    background:rgba(0,0,0,.6);z-index:100;padding:16px;
+    align-items:center;justify-content:center;
   }
   .modal-overlay.open{display:flex;}
   .modal{
-    background:#fff;
-    border-radius:16px;
-    width:100%;
-    max-width:460px;
-    max-height:88vh;
-    display:flex;
-    flex-direction:column;
-    animation:popIn 0.22s ease-out;
-    box-shadow:0 12px 32px rgba(0,0,0,.35);
-    overflow:hidden;
+    background:#fff;border-radius:16px;width:100%;max-width:460px;
+    max-height:88vh;display:flex;flex-direction:column;
+    animation:popIn 0.22s ease-out;box-shadow:0 12px 32px rgba(0,0,0,.35);overflow:hidden;
   }
   @keyframes popIn{from{transform:scale(0.92);opacity:0;}to{transform:scale(1);opacity:1;}}
-
   .modal-header{
-    background:var(--maroon);
-    color:#fff;
-    padding:16px 18px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+    background:var(--maroon);color:#fff;padding:16px 18px;
+    display:flex;justify-content:space-between;align-items:center;
   }
   .modal-header h3{margin:0;color:#fff;font-size:1.05rem;font-weight:700;}
   .modal-header.new-sale{background:var(--gold);}
   .modal-header.new-sale h3{color:var(--maroon-dark);}
   .modal-header.new-sale .modal-close{color:var(--maroon-dark);}
-  .modal-close{
-    background:none;border:none;font-size:1.7rem;color:#fff;cursor:pointer;padding:0 4px;line-height:1;opacity:.85;
-  }
+  .modal-close{background:none;border:none;font-size:1.7rem;color:#fff;cursor:pointer;padding:0 4px;line-height:1;opacity:.85;}
   .modal-close:active{opacity:1;}
-
-  .modal-body{
-    padding:18px;
-    overflow-y:auto;
-    flex:1;
-  }
-
-  .empty-state{
-    text-align:center;
-    color:#a3937a;
-    font-size:.85rem;
-    padding:30px 20px;
-  }
+  .modal-body{padding:18px;overflow-y:auto;flex:1;}
+  .empty-state{text-align:center;color:#a3937a;font-size:.85rem;padding:30px 20px;}
   .empty-state .emoji{font-size:2rem;display:block;margin-bottom:8px;}
-
-  /* ===== FORM STYLES (shared for new product / add / edit) ===== */
   .scanned-code-display{
     background:linear-gradient(135deg, #FFF9E6, #FBF6EC);
-    border:2px dashed var(--gold);
-    border-radius:10px;
-    padding:12px;
-    margin-bottom:16px;
-    text-align:center;
+    border:2px dashed var(--gold);border-radius:10px;padding:12px;margin-bottom:16px;text-align:center;
   }
   .scanned-code-display .label-small{
-    display:block;
-    font-size:.68rem;
-    color:#8a7860;
-    font-weight:700;
-    text-transform:uppercase;
-    letter-spacing:.6px;
-    margin-bottom:6px;
+    display:block;font-size:.68rem;color:#8a7860;font-weight:700;
+    text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;
   }
   .scanned-code-display .code-value{
-    font-family:'Courier New', monospace;
-    font-size:1.15rem;
-    font-weight:800;
-    color:var(--maroon);
-    letter-spacing:1.5px;
-    word-break:break-all;
+    font-family:'Courier New', monospace;font-size:1.15rem;font-weight:800;
+    color:var(--maroon);letter-spacing:1.5px;word-break:break-all;
   }
-
   .form-group{margin-bottom:14px;}
   .form-group label{
-    font-size:.78rem;
-    font-weight:700;
-    color:var(--maroon);
-    display:block;
-    margin-bottom:6px;
-    text-transform:uppercase;
-    letter-spacing:.3px;
+    font-size:.78rem;font-weight:700;color:var(--maroon);display:block;
+    margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px;
   }
   .form-group input{
-    width:100%;
-    padding:11px 12px;
-    border:2px solid var(--line);
-    border-radius:8px;
-    font-size:1rem;
-    margin-bottom:0;
-    background:#fffdf8;
-    transition:border-color 0.15s;
+    width:100%;padding:11px 12px;border:2px solid var(--line);border-radius:8px;
+    font-size:1rem;margin-bottom:0;background:#fffdf8;transition:border-color 0.15s;
   }
-  .form-group input:focus{
-    outline:none;
-    border-color:var(--gold);
-    background:#fff;
-  }
-  .form-group input[readonly]{
-    background:#F5EDE0;
-    color:#6b5a44;
-    cursor:not-allowed;
-  }
-
-  .form-row{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-  }
-
-  .qty-stepper{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:0;
-    margin-bottom:16px;
-  }
+  .form-group input:focus{outline:none;border-color:var(--gold);background:#fff;}
+  .form-group input[readonly]{background:#F5EDE0;color:#6b5a44;cursor:not-allowed;}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .qty-stepper{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:16px;}
   .qty-stepper button{
-    width:52px;
-    height:52px;
-    border:none;
-    background:var(--maroon);
-    color:#fff;
-    font-size:1.5rem;
-    font-weight:700;
-    cursor:pointer;
-    border-radius:8px;
-    line-height:1;
-    transition:background 0.15s;
+    width:52px;height:52px;border:none;background:var(--maroon);color:#fff;
+    font-size:1.5rem;font-weight:700;cursor:pointer;border-radius:8px;line-height:1;transition:background 0.15s;
   }
   .qty-stepper button:active{background:var(--maroon-dark);}
   .qty-stepper input{
-    width:80px;
-    height:52px;
-    text-align:center;
-    font-size:1.4rem;
-    font-weight:800;
-    margin:0 8px;
-    padding:0;
-    border:2px solid var(--line);
-    border-radius:8px;
-    color:var(--maroon);
+    width:80px;height:52px;text-align:center;font-size:1.4rem;font-weight:800;
+    margin:0 8px;padding:0;border:2px solid var(--line);border-radius:8px;color:var(--maroon);
   }
   .qty-stepper input:focus{outline:none;border-color:var(--gold);}
-
   .mode-indicator{
-    display:inline-block;
-    padding:4px 12px;
-    border-radius:20px;
-    font-size:.72rem;
-    font-weight:700;
-    text-transform:uppercase;
-    letter-spacing:.5px;
-    margin-bottom:12px;
+    display:inline-block;padding:4px 12px;border-radius:20px;font-size:.72rem;
+    font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;
   }
   .mode-indicator.stock{background:#FBE7E7;color:var(--maroon);}
   .mode-indicator.sale{background:#FFF3CD;color:#8a6d00;}
   .mode-indicator.edit{background:#E8F0FE;color:#1a4f8a;}
+  .modal-actions{display:flex;gap:10px;margin-top:8px;}
+  .modal-actions .btn{flex:1;padding:14px;}
+  .modal-actions .btn.ghost{background:#F5EDE0;border:none;font-weight:700;}
 
-  .modal-actions{
-    display:flex;
-    gap:10px;
-    margin-top:8px;
+  /* ====== SALES REPORT STYLES ====== */
+  .report-tabs{
+    display:flex;gap:6px;margin-bottom:14px;background:var(--cream);
+    border-radius:10px;padding:4px;
   }
-  .modal-actions .btn{flex:1; padding:14px;}
-  .modal-actions .btn.ghost{background:#F5EDE0; border:none; font-weight:700;}
+  .report-tab{
+    flex:1;padding:10px 6px;border:none;background:none;border-radius:7px;
+    font-size:.8rem;font-weight:700;color:#8a7860;cursor:pointer;transition:all 0.15s;
+  }
+  .report-tab.active{background:var(--maroon);color:#fff;box-shadow:0 2px 6px rgba(122,30,43,.25);}
+
+  .report-summary{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;
+  }
+  .report-summary .box{
+    background:var(--cream);border-radius:10px;padding:12px;text-align:center;
+    border:1px solid var(--line);
+  }
+  .report-summary .box .big-num{
+    font-size:1.3rem;font-weight:800;color:var(--maroon);line-height:1.2;
+  }
+  .report-summary .box .small-label{
+    font-size:.68rem;color:#8a7860;text-transform:uppercase;
+    letter-spacing:.4px;font-weight:600;margin-top:4px;
+  }
+
+  .day-group{
+    margin-bottom:12px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    overflow:hidden;
+    background:#fff;
+  }
+  .day-header{
+    display:flex;justify-content:space-between;align-items:center;
+    background:var(--cream);padding:10px 14px;cursor:pointer;
+    border-bottom:1px solid var(--line);
+  }
+  .day-header .day-title{
+    font-weight:800;color:var(--maroon);font-size:.88rem;
+  }
+  .day-header .day-total{
+    font-weight:800;color:var(--green);font-size:.9rem;
+  }
+  .day-header .chev{
+    margin-left:8px;color:#8a7860;font-size:.8rem;transition:transform 0.2s;
+  }
+  .day-group.collapsed .day-body{display:none;}
+  .day-group.collapsed .chev{transform:rotate(-90deg);}
+  .day-body{padding:4px 14px 10px;}
+
+  .top-prod-item{
+    display:flex;align-items:center;gap:12px;
+    padding:10px 0;border-bottom:1px solid var(--line);
+  }
+  .top-prod-item:last-child{border-bottom:none;}
+  .top-prod-item .rank{
+    width:32px;height:32px;border-radius:50%;
+    background:var(--gold);color:var(--maroon-dark);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:.9rem;flex-shrink:0;
+  }
+  .top-prod-item .rank.gold{background:#FFD700;color:#7A1E2B;}
+  .top-prod-item .rank.silver{background:#C0C0C0;color:#333;}
+  .top-prod-item .rank.bronze{background:#CD7F32;color:#fff;}
+  .top-prod-item .info{flex:1;min-width:0;}
+  .top-prod-item .info .pname{
+    font-weight:700;font-size:.88rem;color:var(--ink);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .top-prod-item .info .pmeta{
+    font-size:.72rem;color:#8a7860;margin-top:2px;
+  }
+  .top-prod-item .rev{
+    font-weight:800;color:var(--maroon);font-size:.88rem;white-space:nowrap;
+  }
 </style>
 </head>
 <body>
@@ -500,6 +312,7 @@
 <nav>
   <button class="tab active" data-view="scan">Scan</button>
   <button class="tab" data-view="dashboard">Dashboard</button>
+  <button class="tab" data-view="reports">Reports</button>
   <button class="tab" data-view="products">Products</button>
   <button class="tab" data-view="qr">Labels</button>
   <button class="tab" data-view="stores">Stores</button>
@@ -533,7 +346,7 @@
 
   <section id="dashboard" class="view">
     <div class="info-banner">
-      💡 <strong>Tip:</strong> Your products are already pre-loaded. Just scan a barcode to add stock or record a sale — no need to re-enter product names every time. Tap on any stat card below to see the details!
+      💡 <strong>Tip:</strong> Your products are already pre-loaded. Just scan a barcode to add stock or record a sale. Tap on any stat card below to see details. Open the <strong>Reports</strong> tab for daily/monthly sales tracking.
     </div>
 
     <div class="stat-grid" style="margin-bottom:14px;">
@@ -569,7 +382,7 @@
     </div>
 
     <div class="card">
-      <h2>🏆 Top Selling Products</h2>
+      <h2>🏆 Top Selling Products (Today)</h2>
       <div id="topList"><p class="empty">No sales recorded yet.</p></div>
     </div>
     <div class="card">
@@ -578,11 +391,21 @@
     </div>
   </section>
 
+  <!-- REPORTS VIEW -->
+  <section id="reports" class="view">
+    <div class="card">
+      <h2>📈 Sales Reports</h2>
+      <div class="report-tabs">
+        <button class="report-tab active" data-report="daily">📅 Daily</button>
+        <button class="report-tab" data-report="monthly">📆 Monthly</button>
+        <button class="report-tab" data-report="top">🏆 Top Products</button>
+      </div>
+      <div id="reportContent"></div>
+    </div>
+  </section>
+
   <section id="products" class="view">
-    <button class="add-prod-btn" id="openAddProdBtn">
-      <span class="plus-icon">+</span>
-      <span>Add New Product</span>
-    </button>
+    <button class="btn" id="openAddProdBtn" style="margin-bottom:14px; padding:16px; font-size:1rem;">➕ Add New Product</button>
 
     <div class="card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
@@ -610,14 +433,14 @@
       <button class="btn ghost" id="printQrBtn" style="margin-top:10px;display:none;">Print this label</button>
     </div>
     <div class="card">
-      <p class="note">Need labels for multiple products at once? Open <strong>barcode-labels.html</strong> from this project — it prints a ready sheet of all product barcodes you can cut out and stick on items.</p>
+      <p class="note">Need labels for multiple products at once? Open <strong>barcode-labels.html</strong> from this project — it prints a ready sheet of all product barcodes.</p>
     </div>
   </section>
 
   <section id="stores" class="view">
     <div class="card">
       <h2>🏪 Stores</h2>
-      <p class="note" style="margin-bottom:10px;">Each store has its own unique QR code and separate inventory/sales data. Scan or tap a store's QR code to switch to it.</p>
+      <p class="note" style="margin-bottom:10px;">Each store has its own unique QR code and separate inventory/sales data.</p>
       <div id="storeList"></div>
     </div>
     <div class="card">
@@ -628,7 +451,7 @@
     </div>
     <div class="card">
       <h2>💾 Backup / Restore Data</h2>
-      <p class="note">The app works offline using your browser's local storage. Data will not disappear even without an internet connection. There is no live server, so there is no automatic sync across devices, but you can export a backup file and import it on another phone or browser.</p>
+      <p class="note">The app works offline using your browser's local storage. You can export a backup file and import it on another phone or browser.</p>
       <div class="btn-row" style="margin-top:10px;">
         <button class="btn ghost small" id="exportBtn">Export (JSON)</button>
         <button class="btn small" id="importBtn">Import</button>
@@ -641,7 +464,6 @@
 
 <div id="toast"></div>
 
-<!-- DETAILS MODAL -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <div class="modal-header">
@@ -652,7 +474,6 @@
   </div>
 </div>
 
-<!-- UNIFIED PRODUCT MODAL (New / Add / Edit) -->
 <div class="modal-overlay" id="prodModalOverlay">
   <div class="modal">
     <div class="modal-header" id="prodModalHeader">
@@ -663,17 +484,14 @@
       <div style="text-align:center;margin-bottom:14px;">
         <span class="mode-indicator stock" id="prodModeIndicator">📦 Stock Entry</span>
       </div>
-
       <div class="scanned-code-display">
         <span class="label-small" id="prodCodeLabel">Scanned Barcode</span>
         <span class="code-value" id="prodCodeText">—</span>
       </div>
-
       <div class="form-group">
         <label>Product Name</label>
         <input id="pmName" placeholder="e.g. Datu Puti Soy Sauce (200ml)" autocomplete="off">
       </div>
-
       <div class="form-row">
         <div class="form-group">
           <label>Cost Price (₱)</label>
@@ -684,7 +502,6 @@
           <input id="pmPrice" type="number" step="0.01" placeholder="0.00" inputmode="decimal">
         </div>
       </div>
-
       <div id="prodQtySection">
         <div class="form-group">
           <label id="pmQtyLabel">Quantity</label>
@@ -695,7 +512,6 @@
           </div>
         </div>
       </div>
-
       <div class="modal-actions">
         <button class="btn ghost" id="prodModalCancel">Cancel</button>
         <button class="btn" id="prodModalSave">Add to Cart</button>
@@ -712,9 +528,7 @@ const STORES_KEY = 'sarismart_stores_v1';
 const ACTIVE_STORE_KEY = 'sarismart_active_store';
 const STORE_QR_PREFIX = 'SARISMART-STORE:';
 
-function genStoreCode(){
-  return 'STORE-' + Math.random().toString(36).slice(2,6).toUpperCase();
-}
+function genStoreCode(){ return 'STORE-' + Math.random().toString(36).slice(2,6).toUpperCase(); }
 function loadStores(){
   const raw = localStorage.getItem(STORES_KEY);
   if(raw) return JSON.parse(raw);
@@ -739,7 +553,6 @@ function loadDB(code){
   const raw = localStorage.getItem(dbKeyFor(code));
   if(raw) return JSON.parse(raw);
   const isFirstStore = stores[0] && stores[0].code === code;
-  
   const seedProducts = [
     { code: '4801668602034', name: 'Datu Puti Soy Sauce (200ml)', cost: 0, price: 0, stock: 0 },
     { code: '4800361410816', name: 'Bear Brand Fortified Powdered Milk Drink (33g)', cost: 0, price: 0, stock: 0 },
@@ -794,7 +607,6 @@ function loadDB(code){
     { code: '750515018402', name: 'SkyFlakes Crackers (25g)', cost: 0, price: 0, stock: 0 },
     { code: '4902430327428', name: 'Safeguard Bar Arctic Fresh (55g)', cost: 0, price: 0, stock: 0 }
   ];
-
   const seed = {
     products: isFirstStore ? seedProducts : [],
     transactions: []
@@ -824,6 +636,7 @@ function switchStore(code){
   renderProducts();
   renderQrSelect();
   renderStores();
+  renderReports();
   toast('Switched to: ' + store.name);
 }
 
@@ -841,16 +654,13 @@ function openModal(title, htmlContent){
   document.getElementById('modalBody').innerHTML = htmlContent;
   document.getElementById('modalOverlay').classList.add('open');
 }
-function closeModal(){
-  document.getElementById('modalOverlay').classList.remove('open');
-}
+function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); }
 document.getElementById('modalClose').addEventListener('click', closeModal);
 document.getElementById('modalOverlay').addEventListener('click', (e)=>{
   if(e.target.id === 'modalOverlay') closeModal();
 });
 
 /* ---------- UNIFIED PRODUCT MODAL ---------- */
-// Mode: 'new-scan' | 'add' | 'edit'
 let prodModalMode = 'new-scan';
 let pendingScannedCode = null;
 let editingProductCode = null;
@@ -867,6 +677,8 @@ function openProductModal(mode, opts = {}){
 
   header.classList.remove('new-sale');
   qtySection.style.display = 'block';
+  codeText.contentEditable = 'false';
+  codeText.style.outline = 'none';
 
   if(mode === 'new-scan'){
     pendingScannedCode = opts.code;
@@ -874,7 +686,6 @@ function openProductModal(mode, opts = {}){
     codeLabel.textContent = 'Scanned Barcode';
     codeText.textContent = opts.code;
     if(currentMode === 'stock'){
-      header.classList.remove('new-sale');
       indicator.className = 'mode-indicator stock';
       indicator.textContent = '📦 Stock Entry';
       document.getElementById('pmQtyLabel').textContent = 'Quantity Received (Stock)';
@@ -890,14 +701,12 @@ function openProductModal(mode, opts = {}){
     document.getElementById('pmCost').value = '';
     document.getElementById('pmPrice').value = '';
     document.getElementById('pmQty').value = 1;
-    document.getElementById('pmName').removeAttribute('readonly');
     setTimeout(()=>document.getElementById('pmName').focus(), 250);
   }
   else if(mode === 'add'){
     pendingScannedCode = null;
     title.textContent = 'Add New Product';
     codeLabel.textContent = 'Product Barcode';
-    codeText.textContent = 'Enter barcode below';
     indicator.className = 'mode-indicator edit';
     indicator.textContent = '🆕 New Product';
     document.getElementById('pmQtyLabel').textContent = 'Starting Stock';
@@ -906,23 +715,20 @@ function openProductModal(mode, opts = {}){
     document.getElementById('pmCost').value = '';
     document.getElementById('pmPrice').value = '';
     document.getElementById('pmQty').value = 0;
-    document.getElementById('pmName').removeAttribute('readonly');
-    // For 'add' mode, we need a barcode input; use the code-text as editable field
-    codeText.contentEditable = 'true';
     codeText.textContent = '';
-    codeText.style.outline = 'none';
+    codeText.contentEditable = 'true';
+    codeText.style.outline = '1px solid var(--gold)';
+    codeText.style.borderRadius = '4px';
+    codeText.style.padding = '4px';
     codeText.style.minHeight = '24px';
     codeText.style.cursor = 'text';
-    setTimeout(()=>{
-      codeText.focus();
-    }, 250);
+    setTimeout(()=>codeText.focus(), 250);
   }
   else if(mode === 'edit'){
     const p = opts.product;
     editingProductCode = p.code;
     title.textContent = 'Edit Product';
     codeLabel.textContent = 'Product Barcode';
-    codeText.contentEditable = 'false';
     codeText.textContent = p.code;
     indicator.className = 'mode-indicator edit';
     indicator.textContent = '✏️ Edit Details';
@@ -936,11 +742,6 @@ function openProductModal(mode, opts = {}){
     setTimeout(()=>document.getElementById('pmName').focus(), 250);
   }
 
-  // Cleanup contentEditable for non-add modes
-  if(mode !== 'add'){
-    codeText.contentEditable = 'false';
-  }
-
   document.getElementById('prodModalOverlay').classList.add('open');
 }
 
@@ -950,6 +751,8 @@ function closeProductModal(){
   editingProductCode = null;
   const codeText = document.getElementById('prodCodeText');
   codeText.contentEditable = 'false';
+  codeText.style.outline = 'none';
+  codeText.style.padding = '0';
 }
 
 document.getElementById('prodModalClose').addEventListener('click', closeProductModal);
@@ -984,10 +787,7 @@ document.getElementById('prodModalSave').addEventListener('click', ()=>{
   if(prodModalMode === 'new-scan'){
     const code = pendingScannedCode;
     if(!code) return;
-    if(qty <= 0){
-      toast('Quantity must be at least 1.');
-      return;
-    }
+    if(qty <= 0){ toast('Quantity must be at least 1.'); return; }
     const product = { code, name, cost, price, stock: 0 };
     db.products.push(product);
     saveDB(db);
@@ -999,15 +799,8 @@ document.getElementById('prodModalSave').addEventListener('click', ()=>{
   else if(prodModalMode === 'add'){
     const codeText = document.getElementById('prodCodeText');
     const code = codeText.textContent.trim().replace(/[^0-9A-Za-z]/g, '');
-    if(!code){
-      toast('Please enter a barcode.');
-      codeText.focus();
-      return;
-    }
-    if(db.products.find(p => p.code === code)){
-      toast('A product with this barcode already exists.');
-      return;
-    }
+    if(!code){ toast('Please enter a barcode.'); codeText.focus(); return; }
+    if(db.products.find(p => p.code === code)){ toast('A product with this barcode already exists.'); return; }
     const product = { code, name, cost, price, stock: qty };
     db.products.push(product);
     saveDB(db);
@@ -1033,10 +826,7 @@ document.getElementById('prodModalSave').addEventListener('click', ()=>{
   }
 });
 
-/* Open "Add New Product" from Products tab */
-document.getElementById('openAddProdBtn').addEventListener('click', ()=>{
-  openProductModal('add');
-});
+document.getElementById('openAddProdBtn').addEventListener('click', ()=>{ openProductModal('add'); });
 
 /* ---------- NAVIGATION ---------- */
 document.querySelectorAll('.tab').forEach(btn=>{
@@ -1046,6 +836,7 @@ document.querySelectorAll('.tab').forEach(btn=>{
     btn.classList.add('active');
     document.getElementById(btn.dataset.view).classList.add('active');
     if(btn.dataset.view==='dashboard') renderDashboard();
+    if(btn.dataset.view==='reports') renderReports();
     if(btn.dataset.view==='products') renderProducts();
     if(btn.dataset.view==='qr') renderQrSelect();
     if(btn.dataset.view==='stores') renderStores();
@@ -1076,7 +867,7 @@ function setScanStatus(state, text){
 function startNoBarcodeTimer(){
   clearTimeout(scanStatusTimer);
   scanStatusTimer = setTimeout(()=>{
-    setScanStatus('none', '⚠️ <strong>No visible barcode detected.</strong><br>Move the camera closer, adjust the lighting, or tap <strong>"Enter barcode manually"</strong> below.');
+    setScanStatus('none', '⚠️ <strong>No visible barcode detected.</strong><br>Move the camera closer or tap <strong>"Enter barcode manually"</strong> below.');
   }, 6000);
 }
 
@@ -1088,9 +879,7 @@ function startScanner(){
     qrbox: { width: 300, height: 200 },
     aspectRatio: 1.0,
     disableFlip: true,
-    experimentalFeatures: {
-      useBarCodeDetectorIfSupported: true
-    },
+    experimentalFeatures: { useBarCodeDetectorIfSupported: true },
     formatsToSupport: [
       Html5QrcodeSupportedFormats.EAN_13,
       Html5QrcodeSupportedFormats.EAN_8,
@@ -1133,24 +922,19 @@ let cart = [];
 
 function handleCode(rawCode){
   const code = rawCode.toString().replace(/[^0-9A-Za-z]/g, '');
-
   if(code.startsWith(STORE_QR_PREFIX)){
     const storeCode = code.slice(STORE_QR_PREFIX.length);
     switchStore(storeCode);
     return;
   }
-
   toast('Scanned: ' + code);
   let product = db.products.find(p=>p.code===code);
-
   if(!product){
     openProductModal('new-scan', { code });
     return;
   }
-
   const qty = parseInt(prompt((currentMode==='stock' ? 'Quantity received (Stock):' : 'Quantity sold (Sale):')) || '0', 10);
   if(!qty || qty<=0) return;
-
   cart.push({ code: product.code, name: product.name, cost: product.cost, price: product.price, qty, type: currentMode });
   renderCart();
   toast(`Added: ${qty} × ${product.name}. You can scan more items.`);
@@ -1175,15 +959,12 @@ function renderCart(){
 }
 
 function clearCart(){ cart = []; renderCart(); }
-
 document.getElementById('clearCartBtn').addEventListener('click', clearCart);
 
 document.getElementById('saveCartBtn').addEventListener('click', ()=>{
   if(!cart.length) return;
   const txnId = genTxnId();
   const now = new Date().toISOString();
-  let totalProfit = 0;
-
   cart.forEach(item => {
     const product = db.products.find(p=>p.code===item.code);
     if(!product) return;
@@ -1193,7 +974,6 @@ document.getElementById('saveCartBtn').addEventListener('click', ()=>{
     } else {
       product.stock -= item.qty;
       const profit = item.qty * (item.price - item.cost);
-      totalProfit += profit;
       db.transactions.push({ txnId, date: now, type:'sale', code:item.code, name:item.name, qty:item.qty, amount:item.qty*item.price, profit });
     }
   });
@@ -1204,6 +984,9 @@ document.getElementById('saveCartBtn').addEventListener('click', ()=>{
   renderProducts();
 });
 
+/* =========================================================
+   DASHBOARD
+   ========================================================= */
 function renderDashboard(){
   const today = new Date().toDateString();
   const todaysTx = db.transactions.filter(t=> new Date(t.date).toDateString()===today);
@@ -1232,7 +1015,7 @@ function renderDashboard(){
   }
 
   const salesByProduct = {};
-  db.transactions.filter(t=>t.type==='sale').forEach(t=>{
+  todaysTx.filter(t=>t.type==='sale').forEach(t=>{
     salesByProduct[t.name] = (salesByProduct[t.name]||0) + t.qty;
   });
   const top = Object.entries(salesByProduct).sort((a,b)=>b[1]-a[1]).slice(0,5);
@@ -1251,6 +1034,7 @@ function renderDashboard(){
   }).join('') : '<p class="empty">Nothing logged yet — scan a product to start.</p>';
 }
 
+/* ---------- Stat Card Click Modals ---------- */
 document.getElementById('statStockCard').addEventListener('click', () => {
   const inStock = db.products.filter(p => p.stock > 0);
   if(!inStock.length){
@@ -1322,29 +1106,322 @@ document.getElementById('statLowCard').addEventListener('click', () => {
 });
 
 document.getElementById('resetSalesBtn').addEventListener('click', () => {
-  if(db.transactions.length === 0){
-    toast('No sales history to reset.');
-    return;
-  }
-  if(confirm('Reset all sales history?\n\nThis will clear the dashboard stats (profit, sales count, top products).\n\n⚠️ Your PRODUCTS and their STOCK will NOT be affected.')) {
+  if(db.transactions.length === 0){ toast('No sales history to reset.'); return; }
+  if(confirm('Reset all sales history?\n\nThis will clear the dashboard stats AND the reports (daily, monthly, top products).\n\n⚠️ Your PRODUCTS and their STOCK will NOT be affected.')) {
     db.transactions = [];
     saveDB(db);
     renderDashboard();
+    renderReports();
     toast('Sales history cleared. Products are safe!');
   }
 });
 
-document.getElementById('clearInventoryBtn').addEventListener('click', () => {
-  if(db.products.length === 0) {
-    toast('Inventory is already empty.');
-    return;
+/* =========================================================
+   REPORTS (Daily / Monthly / Top Products)
+   ========================================================= */
+let currentReport = 'daily';
+
+document.querySelectorAll('.report-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.report-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentReport = btn.dataset.report;
+    renderReports();
+  });
+});
+
+function formatDateKey(d){
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const dd = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${dd}`;
+}
+
+function formatMonthKey(d){
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  return `${y}-${m}`;
+}
+
+function formatReadableDate(dateKey){
+  const [y,m,d] = dateKey.split('-');
+  const date = new Date(parseInt(y), parseInt(m)-1, parseInt(d));
+  return date.toLocaleDateString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
+}
+
+function formatReadableMonth(monthKey){
+  const [y,m] = monthKey.split('-');
+  const date = new Date(parseInt(y), parseInt(m)-1, 1);
+  return date.toLocaleDateString('en-US', { year:'numeric', month:'long' });
+}
+
+function renderReports(){
+  const content = document.getElementById('reportContent');
+  const salesTx = db.transactions.filter(t => t.type === 'sale');
+
+  if(currentReport === 'daily'){
+    if(!salesTx.length){
+      content.innerHTML = '<div class="empty-state"><span class="emoji">📅</span>No sales yet.<br>Start scanning items in Sale mode to see your daily report.</div>';
+      return;
+    }
+    // Group by day
+    const groups = {};
+    salesTx.forEach(t => {
+      const key = formatDateKey(new Date(t.date));
+      if(!groups[key]) groups[key] = { items: [], total: 0, qty: 0, profit: 0 };
+      groups[key].items.push(t);
+      groups[key].total += t.amount;
+      groups[key].qty += t.qty;
+      groups[key].profit += t.profit;
+    });
+
+    const sortedDays = Object.keys(groups).sort((a,b) => b.localeCompare(a));
+    const today = formatDateKey(new Date());
+
+    // Summary
+    const totalRevenue = salesTx.reduce((s,t)=>s+t.amount,0);
+    const totalProfit = salesTx.reduce((s,t)=>s+t.profit,0);
+    const totalItems = salesTx.reduce((s,t)=>s+t.qty,0);
+
+    let html = `
+      <div class="report-summary">
+        <div class="box"><div class="big-num">₱${totalRevenue.toFixed(2)}</div><div class="small-label">Total Revenue</div></div>
+        <div class="box"><div class="big-num">₱${totalProfit.toFixed(2)}</div><div class="small-label">Total Profit</div></div>
+        <div class="box"><div class="big-num">${totalItems}</div><div class="small-label">Items Sold</div></div>
+        <div class="box"><div class="big-num">${sortedDays.length}</div><div class="small-label">Active Days</div></div>
+      </div>
+    `;
+
+    sortedDays.forEach((dayKey, idx) => {
+      const g = groups[dayKey];
+      const isToday = dayKey === today;
+      const collapsed = idx > 2 && !isToday ? 'collapsed' : '';
+      const dayLabel = isToday ? '📅 TODAY — ' + formatReadableDate(dayKey) : formatReadableDate(dayKey);
+      html += `
+        <div class="day-group ${collapsed}" data-day="${dayKey}">
+          <div class="day-header">
+            <div>
+              <div class="day-title">${dayLabel}</div>
+              <div style="font-size:.72rem;color:#8a7860;margin-top:2px;">${g.qty} items · ${g.items.length} transactions</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="day-total">₱${g.total.toFixed(2)}</div>
+              <div style="font-size:.7rem;color:var(--green);font-weight:700;">+₱${g.profit.toFixed(2)} profit</div>
+            </div>
+            <span class="chev">▼</span>
+          </div>
+          <div class="day-body">
+            ${g.items.map(t => {
+              const d = new Date(t.date);
+              return `<div class="prod-row" style="font-size:.82rem;">
+                <span><span class="name">${t.name}</span><br><span class="meta">${t.qty} × ₱${(t.amount/t.qty).toFixed(2)} · ${d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span></span>
+                <span class="qty-badge">₱${t.amount.toFixed(2)}</span>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    });
+
+    content.innerHTML = html;
+
+    // Collapse/expand toggles
+    content.querySelectorAll('.day-header').forEach(h => {
+      h.addEventListener('click', () => {
+        h.parentElement.classList.toggle('collapsed');
+      });
+    });
   }
-  if(confirm('Are you sure you want to clear ALL products from the inventory? This will also clear your sales history. This cannot be undone.')) {
+
+  else if(currentReport === 'monthly'){
+    if(!salesTx.length){
+      content.innerHTML = '<div class="empty-state"><span class="emoji">📆</span>No sales yet.<br>Start scanning items in Sale mode to see your monthly report.</div>';
+      return;
+    }
+    const groups = {};
+    salesTx.forEach(t => {
+      const key = formatMonthKey(new Date(t.date));
+      if(!groups[key]) groups[key] = { items: [], total: 0, qty: 0, profit: 0 };
+      groups[key].items.push(t);
+      groups[key].total += t.amount;
+      groups[key].qty += t.qty;
+      groups[key].profit += t.profit;
+    });
+
+    const sortedMonths = Object.keys(groups).sort((a,b) => b.localeCompare(a));
+    const thisMonth = formatMonthKey(new Date());
+
+    const totalRevenue = salesTx.reduce((s,t)=>s+t.amount,0);
+    const totalProfit = salesTx.reduce((s,t)=>s+t.profit,0);
+    const totalItems = salesTx.reduce((s,t)=>s+t.qty,0);
+
+    let html = `
+      <div class="report-summary">
+        <div class="box"><div class="big-num">₱${totalRevenue.toFixed(2)}</div><div class="small-label">All-Time Revenue</div></div>
+        <div class="box"><div class="big-num">₱${totalProfit.toFixed(2)}</div><div class="small-label">All-Time Profit</div></div>
+        <div class="box"><div class="big-num">${totalItems}</div><div class="small-label">Total Items Sold</div></div>
+        <div class="box"><div class="big-num">${sortedMonths.length}</div><div class="small-label">Active Months</div></div>
+      </div>
+    `;
+
+    sortedMonths.forEach((monthKey, idx) => {
+      const g = groups[monthKey];
+      const isCurrent = monthKey === thisMonth;
+      const collapsed = idx > 2 && !isCurrent ? 'collapsed' : '';
+      const monthLabel = isCurrent ? '📆 THIS MONTH — ' + formatReadableMonth(monthKey) : formatReadableMonth(monthKey);
+
+      // Group by day inside the month
+      const dayGroups = {};
+      g.items.forEach(t => {
+        const dKey = formatDateKey(new Date(t.date));
+        if(!dayGroups[dKey]) dayGroups[dKey] = { items: [], total: 0, qty: 0 };
+        dayGroups[dKey].items.push(t);
+        dayGroups[dKey].total += t.amount;
+        dayGroups[dKey].qty += t.qty;
+      });
+      const sortedDays = Object.keys(dayGroups).sort((a,b)=>b.localeCompare(a));
+
+      html += `
+        <div class="day-group ${collapsed}" data-month="${monthKey}">
+          <div class="day-header">
+            <div>
+              <div class="day-title">${monthLabel}</div>
+              <div style="font-size:.72rem;color:#8a7860;margin-top:2px;">${g.qty} items · ${sortedDays.length} active days</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="day-total">₱${g.total.toFixed(2)}</div>
+              <div style="font-size:.7rem;color:var(--green);font-weight:700;">+₱${g.profit.toFixed(2)} profit</div>
+            </div>
+            <span class="chev">▼</span>
+          </div>
+          <div class="day-body">
+            ${sortedDays.map(dayKey => {
+              const day = dayGroups[dayKey];
+              return `<div style="margin-top:8px;">
+                <div style="font-size:.78rem;font-weight:800;color:var(--maroon);padding:6px 0;border-bottom:1px dashed var(--line);">
+                  ${formatReadableDate(dayKey)} — <span style="color:var(--green);">₱${day.total.toFixed(2)}</span>
+                </div>
+                ${day.items.map(t => {
+                  const d = new Date(t.date);
+                  return `<div class="prod-row" style="font-size:.8rem;">
+                    <span><span class="name">${t.name}</span><br><span class="meta">${t.qty} × ₱${(t.amount/t.qty).toFixed(2)} · ${d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span></span>
+                    <span class="qty-badge">₱${t.amount.toFixed(2)}</span>
+                  </div>`;
+                }).join('')}
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    });
+
+    content.innerHTML = html;
+    content.querySelectorAll('.day-header').forEach(h => {
+      h.addEventListener('click', () => {
+        h.parentElement.classList.toggle('collapsed');
+      });
+    });
+  }
+
+  else if(currentReport === 'top'){
+    if(!salesTx.length){
+      content.innerHTML = '<div class="empty-state"><span class="emoji">🏆</span>No sales yet.<br>Start scanning items in Sale mode to see your top products.</div>';
+      return;
+    }
+
+    // Toggle: All-time / This Month / Today
+    const topFilterHtml = `
+      <div class="report-tabs" style="margin-bottom:14px;">
+        <button class="report-tab active" data-topfilter="all">All-Time</button>
+        <button class="report-tab" data-topfilter="month">This Month</button>
+        <button class="report-tab" data-topfilter="today">Today</button>
+      </div>
+      <div id="topFilteredContent"></div>
+    `;
+    content.innerHTML = topFilterHtml;
+
+    function renderTopFiltered(filter){
+      const today = formatDateKey(new Date());
+      const thisMonth = formatMonthKey(new Date());
+      let filtered = salesTx;
+      if(filter === 'today') filtered = salesTx.filter(t => formatDateKey(new Date(t.date)) === today);
+      else if(filter === 'month') filtered = salesTx.filter(t => formatMonthKey(new Date(t.date)) === thisMonth);
+
+      if(!filtered.length){
+        document.getElementById('topFilteredContent').innerHTML =
+          '<div class="empty-state"><span class="emoji">📭</span>No sales for this period.</div>';
+        return;
+      }
+
+      // Aggregate by product
+      const prods = {};
+      filtered.forEach(t => {
+        if(!prods[t.name]) prods[t.name] = { qty: 0, revenue: 0, profit: 0 };
+        prods[t.name].qty += t.qty;
+        prods[t.name].revenue += t.amount;
+        prods[t.name].profit += t.profit;
+      });
+
+      const sorted = Object.entries(prods).sort((a,b) => b[1].qty - a[1].qty);
+
+      const totalRevenue = filtered.reduce((s,t)=>s+t.amount,0);
+      const totalProfit = filtered.reduce((s,t)=>s+t.profit,0);
+      const totalItems = filtered.reduce((s,t)=>s+t.qty,0);
+
+      let html = `
+        <div class="report-summary" style="margin-bottom:14px;">
+          <div class="box"><div class="big-num">₱${totalRevenue.toFixed(2)}</div><div class="small-label">Revenue</div></div>
+          <div class="box"><div class="big-num">₱${totalProfit.toFixed(2)}</div><div class="small-label">Profit</div></div>
+          <div class="box"><div class="big-num">${totalItems}</div><div class="small-label">Items Sold</div></div>
+          <div class="box"><div class="big-num">${sorted.length}</div><div class="small-label">Unique Products</div></div>
+        </div>
+        <div style="font-size:.78rem;font-weight:800;color:var(--maroon);text-transform:uppercase;letter-spacing:.4px;margin:12px 0 6px;">Top Selling Products</div>
+      `;
+
+      sorted.forEach(([name, data], i) => {
+        let rankClass = '';
+        if(i === 0) rankClass = 'gold';
+        else if(i === 1) rankClass = 'silver';
+        else if(i === 2) rankClass = 'bronze';
+
+        html += `
+          <div class="top-prod-item">
+            <div class="rank ${rankClass}">${i+1}</div>
+            <div class="info">
+              <div class="pname">${name}</div>
+              <div class="pmeta">${data.qty} sold · ₱${data.revenue.toFixed(2)} revenue</div>
+            </div>
+            <div class="rev">+₱${data.profit.toFixed(2)}</div>
+          </div>
+        `;
+      });
+
+      document.getElementById('topFilteredContent').innerHTML = html;
+    }
+
+    renderTopFiltered('all');
+    content.querySelectorAll('[data-topfilter]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        content.querySelectorAll('[data-topfilter]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderTopFiltered(btn.dataset.topfilter);
+      });
+    });
+  }
+}
+
+/* =========================================================
+   PRODUCTS
+   ========================================================= */
+document.getElementById('clearInventoryBtn').addEventListener('click', () => {
+  if(db.products.length === 0){ toast('Inventory is already empty.'); return; }
+  if(confirm('Are you sure you want to clear ALL products from the inventory? This will also clear your sales history.')) {
     db.products = [];
     db.transactions = [];
     saveDB(db);
     renderProducts();
     renderDashboard();
+    renderReports();
     renderQrSelect();
     toast('Inventory cleared completely.');
   }
@@ -1369,10 +1446,7 @@ function renderProducts(){
   else if(currentFilter === 'low') filtered = db.products.filter(p => p.stock > 0 && p.stock <= 5);
   else if(currentFilter === 'out') filtered = db.products.filter(p => p.stock === 0);
 
-  if(!filtered.length){
-    list.innerHTML = `<p class="empty">No products match this filter.</p>`;
-    return;
-  }
+  if(!filtered.length){ list.innerHTML = `<p class="empty">No products match this filter.</p>`; return; }
   
   list.innerHTML = filtered.map(p=>`
     <div class="prod-row" style="flex-direction:column; align-items:flex-start; gap:8px;">
@@ -1422,9 +1496,7 @@ function renderProducts(){
     btn.addEventListener('click', (e) => {
       const code = e.target.dataset.code;
       const product = db.products.find(p => p.code === code);
-      if(product) {
-        openProductModal('edit', { product });
-      }
+      if(product) openProductModal('edit', { product });
     });
   });
 
@@ -1498,18 +1570,10 @@ function renderStores(){
       const qrContainer = document.getElementById('storeQr-' + code);
       const canvas = qrContainer.querySelector('canvas');
       const img = qrContainer.querySelector('img');
-      
       let qrDataUrl = '';
-      if (canvas) {
-        qrDataUrl = canvas.toDataURL("image/png");
-      } else if (img) {
-        qrDataUrl = img.src;
-      }
-
-      if (!qrDataUrl) {
-        toast('QR code not ready. Please try again.');
-        return;
-      }
+      if (canvas) qrDataUrl = canvas.toDataURL("image/png");
+      else if (img) qrDataUrl = img.src;
+      if (!qrDataUrl) { toast('QR code not ready. Please try again.'); return; }
 
       const printWindow = window.open('', '_blank');
       printWindow.document.write(`
@@ -1522,10 +1586,6 @@ function renderStores(){
               h1 { color: #7A1E2B; font-size: 28px; margin-bottom: 5px; }
               p { color: #666; font-size: 14px; margin: 5px 0; }
               .code { font-weight: bold; font-family: monospace; background: #FBF6EC; padding: 8px 16px; border-radius: 6px; border: 1px solid #E6DAC2; display: inline-block; margin-top: 10px;}
-              @media print {
-                body { padding: 0; }
-                img { width: 250px; height: 250px; }
-              }
             </style>
           </head>
           <body>
@@ -1534,9 +1594,7 @@ function renderStores(){
             <img src="${qrDataUrl}" alt="Store QR Code">
             <br>
             <p>Store Code: <span class="code">${store.code}</span></p>
-            <script>
-              window.onload = function() { window.print(); window.close(); }
-            <\/script>
+            <script>window.onload = function() { window.print(); window.close(); }<\/script>
           </body>
         </html>
       `);
@@ -1586,6 +1644,7 @@ document.getElementById('importFile').addEventListener('change', (e)=>{
       db = incoming;
       saveDB(db);
       renderDashboard();
+      renderReports();
       renderProducts();
       renderQrSelect();
       toast('Imported data');
@@ -1603,11 +1662,13 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+/* ---------- Init ---------- */
 startScanner();
 renderDashboard();
+renderReports();
 renderProducts();
 renderQrSelect();
 renderStores();
 </script>
 </body>
-    </html>
+  </html>
